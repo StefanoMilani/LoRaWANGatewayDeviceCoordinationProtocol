@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for gateway_device_coordination_protocol_over_lorawan
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -KFLORA_PROJ=../flora-1.0.0/flora -KINET4_3_PROJ=../inet4.3 -DINET_IMPORT -I. -I$$\(FLORA_PROJ\)/src -I$$\(INET4_3_PROJ\)/src -L/usr/lib/x86_64-linux-gnu/ -L$$\(FLORA_PROJ\)/src -L$$\(INET4_3_PROJ\)/src -lssl -lcrypto -lflora$$\(D\) -lINET$$\(D\)
+#  opp_makemake -f --deep -O out -KINET4_3_PROJ=/home/milux/Developer/omnetpp-workspace/inet4.3 -DINET_IMPORT -I. -I$$\(INET4_3_PROJ\)/src -L$$\(INET4_3_PROJ\)/src -lssl -lcrypto -lINET$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -19,13 +19,13 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(QTENV_LIBS) $(CMDENV_LIBS)
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I. -I$(FLORA_PROJ)/src -I$(INET4_3_PROJ)/src
+INCLUDE_PATH = -I. -I$(INET4_3_PROJ)/src
 
 # Additional object and library files to link with
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)/usr/lib/x86_64-linux-gnu/ $(LDFLAG_LIBPATH)$(FLORA_PROJ)/src $(LDFLAG_LIBPATH)$(INET4_3_PROJ)/src  -lssl -lcrypto -lflora$(D) -lINET$(D)
+LIBS = $(LDFLAG_LIBPATH)$(INET4_3_PROJ)/src  -lssl -lcrypto -lINET$(D)
 
 # Output directory
 PROJECT_OUTPUT_DIR = out
@@ -64,8 +64,7 @@ MSGFILES = \
 SMFILES =
 
 # Other makefile variables (-K)
-FLORA_PROJ=../flora-1.0.0/flora
-INET4_3_PROJ=../inet4.3
+INET4_3_PROJ=/home/milux/Developer/omnetpp-workspace/inet4.3
 
 #------------------------------------------------------------------------------
 
@@ -74,11 +73,7 @@ INET4_3_PROJ=../inet4.3
 ifneq ("$(OMNETPP_CONFIGFILE)","")
 CONFIGFILE = $(OMNETPP_CONFIGFILE)
 else
-ifneq ("$(OMNETPP_ROOT)","")
-CONFIGFILE = $(OMNETPP_ROOT)/Makefile.inc
-else
 CONFIGFILE = $(shell opp_configfilepath)
-endif
 endif
 
 ifeq ("$(wildcard $(CONFIGFILE))","")
@@ -89,8 +84,8 @@ include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
-ifneq ($(PLATFORM),win32.x86_64)
-LIBS += -Wl,-rpath,$(abspath /usr/lib/x86_64-linux-gnu/) -Wl,-rpath,$(abspath $(FLORA_PROJ)/src) -Wl,-rpath,$(abspath $(INET4_3_PROJ)/src)
+ifneq ($(PLATFORM),win32)
+LIBS += -Wl,-rpath,$(abspath $(INET4_3_PROJ)/src)
 endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
@@ -120,6 +115,8 @@ $(TARGET_DIR)/% :: $O/%
 	$(Q)$(LN) $< $@
 ifeq ($(TOOLCHAIN_NAME),clang-msabi)
 	-$(Q)-$(LN) $(<:%.dll=%.lib) $(@:%.dll=%.lib) 2>/dev/null
+
+$O/$(TARGET_NAME).pdb: $O/$(TARGET)
 endif
 
 $O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)

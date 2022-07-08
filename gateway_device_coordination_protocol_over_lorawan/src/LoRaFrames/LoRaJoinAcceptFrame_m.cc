@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 6.0 from src/LoRaFrames/LoRaJoinAcceptFrame.msg.
+// Generated file, do not edit! Created by opp_msgtool 6.0 from src/LoRaFrames/LoRaJoinAcceptFrame.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -150,64 +150,6 @@ void doParsimUnpacking(omnetpp::cCommBuffer *, T& t)
 
 }  // namespace omnetpp
 
-namespace {
-template <class T> inline
-typename std::enable_if<std::is_polymorphic<T>::value && std::is_base_of<omnetpp::cObject,T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)(static_cast<const omnetpp::cObject *>(t));
-}
-
-template <class T> inline
-typename std::enable_if<std::is_polymorphic<T>::value && !std::is_base_of<omnetpp::cObject,T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)dynamic_cast<const void *>(t);
-}
-
-template <class T> inline
-typename std::enable_if<!std::is_polymorphic<T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)static_cast<const void *>(t);
-}
-
-}
-
-
-// forward
-template<typename T, typename A>
-std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec);
-
-// Template rule to generate operator<< for shared_ptr<T>
-template<typename T>
-inline std::ostream& operator<<(std::ostream& out,const std::shared_ptr<T>& t) { return out << t.get(); }
-
-// Template rule which fires if a struct or class doesn't have operator<<
-template<typename T>
-inline typename std::enable_if<!std::is_base_of<omnetpp::cObject, T>::value, std::ostream&>::type
-operator<<(std::ostream& out,const T&) {const char *s = omnetpp::opp_typename(typeid(T)); out.put('<'); out.write(s, strlen(s)); out.put('>'); return out;}
-
-// operator<< for std::vector<T>
-template<typename T, typename A>
-inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
-{
-    out.put('{');
-    for(typename std::vector<T,A>::const_iterator it = vec.begin(); it != vec.end(); ++it)
-    {
-        if (it != vec.begin()) {
-            out.put(','); out.put(' ');
-        }
-        out << *it;
-    }
-    out.put('}');
-
-    char buf[32];
-    sprintf(buf, " (size=%u)", (unsigned int)vec.size());
-    out.write(buf, strlen(buf));
-    return out;
-}
-
 Register_Class(LoRaJoinAcceptFrame)
 
 LoRaJoinAcceptFrame::LoRaJoinAcceptFrame(const char *name, short kind) : ::omnetpp::cPacket(name, kind)
@@ -286,13 +228,13 @@ size_t LoRaJoinAcceptFrame::getNetIDArraySize() const
 
 uint8_t LoRaJoinAcceptFrame::getNetID(size_t k) const
 {
-    if (k >= 3) throw omnetpp::cRuntimeError("Array of size 3 indexed by %lu", (unsigned long)k);
+    if (k >= 3) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)3, (unsigned long)k);
     return this->netID[k];
 }
 
 void LoRaJoinAcceptFrame::setNetID(size_t k, uint8_t netID)
 {
-    if (k >= 3) throw omnetpp::cRuntimeError("Array of size 3 indexed by %lu", (unsigned long)k);
+    if (k >= 3) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)3, (unsigned long)k);
     this->netID[k] = netID;
 }
 
@@ -303,13 +245,13 @@ size_t LoRaJoinAcceptFrame::getDevAddrArraySize() const
 
 uint8_t LoRaJoinAcceptFrame::getDevAddr(size_t k) const
 {
-    if (k >= 4) throw omnetpp::cRuntimeError("Array of size 4 indexed by %lu", (unsigned long)k);
+    if (k >= 4) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)4, (unsigned long)k);
     return this->devAddr[k];
 }
 
 void LoRaJoinAcceptFrame::setDevAddr(size_t k, uint8_t devAddr)
 {
-    if (k >= 4) throw omnetpp::cRuntimeError("Array of size 4 indexed by %lu", (unsigned long)k);
+    if (k >= 4) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)4, (unsigned long)k);
     this->devAddr[k] = devAddr;
 }
 
@@ -340,20 +282,20 @@ size_t LoRaJoinAcceptFrame::getCFListArraySize() const
 
 uint8_t LoRaJoinAcceptFrame::getCFList(size_t k) const
 {
-    if (k >= 16) throw omnetpp::cRuntimeError("Array of size 16 indexed by %lu", (unsigned long)k);
+    if (k >= 16) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)16, (unsigned long)k);
     return this->CFList[k];
 }
 
 void LoRaJoinAcceptFrame::setCFList(size_t k, uint8_t CFList)
 {
-    if (k >= 16) throw omnetpp::cRuntimeError("Array of size 16 indexed by %lu", (unsigned long)k);
+    if (k >= 16) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)16, (unsigned long)k);
     this->CFList[k] = CFList;
 }
 
 class LoRaJoinAcceptFrameDescriptor : public omnetpp::cClassDescriptor
 {
   private:
-    mutable const char **propertynames;
+    mutable const char **propertyNames;
     enum FieldConstants {
         FIELD_joinNonce,
         FIELD_netID,
@@ -368,36 +310,38 @@ class LoRaJoinAcceptFrameDescriptor : public omnetpp::cClassDescriptor
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
-    virtual const char *getProperty(const char *propertyname) const override;
+    virtual const char *getProperty(const char *propertyName) const override;
     virtual int getFieldCount() const override;
     virtual const char *getFieldName(int field) const override;
     virtual int findField(const char *fieldName) const override;
     virtual unsigned int getFieldTypeFlags(int field) const override;
     virtual const char *getFieldTypeString(int field) const override;
     virtual const char **getFieldPropertyNames(int field) const override;
-    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
-    virtual int getFieldArraySize(void *object, int field) const override;
-    virtual void setFieldArraySize(void *object, int field, int size) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyName) const override;
+    virtual int getFieldArraySize(omnetpp::any_ptr object, int field) const override;
+    virtual void setFieldArraySize(omnetpp::any_ptr object, int field, int size) const override;
 
-    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
-    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
-    virtual void setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+    virtual const char *getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const override;
+    virtual omnetpp::cValue getFieldValue(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const override;
 
     virtual const char *getFieldStructName(int field) const override;
-    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
-    virtual void setFieldStructValuePointer(void *object, int field, int i, void *ptr) const override;
+    virtual omnetpp::any_ptr getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const override;
 };
 
 Register_ClassDescriptor(LoRaJoinAcceptFrameDescriptor)
 
 LoRaJoinAcceptFrameDescriptor::LoRaJoinAcceptFrameDescriptor() : omnetpp::cClassDescriptor(omnetpp::opp_typename(typeid(LoRaJoinAcceptFrame)), "omnetpp::cPacket")
 {
-    propertynames = nullptr;
+    propertyNames = nullptr;
 }
 
 LoRaJoinAcceptFrameDescriptor::~LoRaJoinAcceptFrameDescriptor()
 {
-    delete[] propertynames;
+    delete[] propertyNames;
 }
 
 bool LoRaJoinAcceptFrameDescriptor::doesSupport(omnetpp::cObject *obj) const
@@ -407,34 +351,34 @@ bool LoRaJoinAcceptFrameDescriptor::doesSupport(omnetpp::cObject *obj) const
 
 const char **LoRaJoinAcceptFrameDescriptor::getPropertyNames() const
 {
-    if (!propertynames) {
+    if (!propertyNames) {
         static const char *names[] = {  nullptr };
-        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
-        propertynames = mergeLists(basenames, names);
+        omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+        const char **baseNames = base ? base->getPropertyNames() : nullptr;
+        propertyNames = mergeLists(baseNames, names);
     }
-    return propertynames;
+    return propertyNames;
 }
 
-const char *LoRaJoinAcceptFrameDescriptor::getProperty(const char *propertyname) const
+const char *LoRaJoinAcceptFrameDescriptor::getProperty(const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? base->getProperty(propertyName) : nullptr;
 }
 
 int LoRaJoinAcceptFrameDescriptor::getFieldCount() const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 6+basedesc->getFieldCount() : 6;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? 6+base->getFieldCount() : 6;
 }
 
 unsigned int LoRaJoinAcceptFrameDescriptor::getFieldTypeFlags(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeFlags(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeFlags(field);
+        field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,    // FIELD_joinNonce
@@ -449,11 +393,11 @@ unsigned int LoRaJoinAcceptFrameDescriptor::getFieldTypeFlags(int field) const
 
 const char *LoRaJoinAcceptFrameDescriptor::getFieldName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldName(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldNames[] = {
         "joinNonce",
@@ -468,24 +412,24 @@ const char *LoRaJoinAcceptFrameDescriptor::getFieldName(int field) const
 
 int LoRaJoinAcceptFrameDescriptor::findField(const char *fieldName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0] == 'j' && strcmp(fieldName, "joinNonce") == 0) return base+0;
-    if (fieldName[0] == 'n' && strcmp(fieldName, "netID") == 0) return base+1;
-    if (fieldName[0] == 'd' && strcmp(fieldName, "devAddr") == 0) return base+2;
-    if (fieldName[0] == 'D' && strcmp(fieldName, "DLSettings") == 0) return base+3;
-    if (fieldName[0] == 'R' && strcmp(fieldName, "RXDelay") == 0) return base+4;
-    if (fieldName[0] == 'C' && strcmp(fieldName, "CFList") == 0) return base+5;
-    return basedesc ? basedesc->findField(fieldName) : -1;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    int baseIndex = base ? base->getFieldCount() : 0;
+    if (strcmp(fieldName, "joinNonce") == 0) return baseIndex + 0;
+    if (strcmp(fieldName, "netID") == 0) return baseIndex + 1;
+    if (strcmp(fieldName, "devAddr") == 0) return baseIndex + 2;
+    if (strcmp(fieldName, "DLSettings") == 0) return baseIndex + 3;
+    if (strcmp(fieldName, "RXDelay") == 0) return baseIndex + 4;
+    if (strcmp(fieldName, "CFList") == 0) return baseIndex + 5;
+    return base ? base->findField(fieldName) : -1;
 }
 
 const char *LoRaJoinAcceptFrameDescriptor::getFieldTypeString(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeString(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeString(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
         "uint32_t",    // FIELD_joinNonce
@@ -500,39 +444,39 @@ const char *LoRaJoinAcceptFrameDescriptor::getFieldTypeString(int field) const
 
 const char **LoRaJoinAcceptFrameDescriptor::getFieldPropertyNames(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldPropertyNames(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldPropertyNames(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-const char *LoRaJoinAcceptFrameDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *LoRaJoinAcceptFrameDescriptor::getFieldProperty(int field, const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldProperty(field, propertyname);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldProperty(field, propertyName);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-int LoRaJoinAcceptFrameDescriptor::getFieldArraySize(void *object, int field) const
+int LoRaJoinAcceptFrameDescriptor::getFieldArraySize(omnetpp::any_ptr object, int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldArraySize(object, field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldArraySize(object, field);
+        field -= base->getFieldCount();
     }
-    LoRaJoinAcceptFrame *pp = (LoRaJoinAcceptFrame *)object; (void)pp;
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
     switch (field) {
         case FIELD_netID: return 3;
         case FIELD_devAddr: return 4;
@@ -541,45 +485,45 @@ int LoRaJoinAcceptFrameDescriptor::getFieldArraySize(void *object, int field) co
     }
 }
 
-void LoRaJoinAcceptFrameDescriptor::setFieldArraySize(void *object, int field, int size) const
+void LoRaJoinAcceptFrameDescriptor::setFieldArraySize(omnetpp::any_ptr object, int field, int size) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldArraySize(object, field, size);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldArraySize(object, field, size);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaJoinAcceptFrame *pp = (LoRaJoinAcceptFrame *)object; (void)pp;
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set array size of field %d of class 'LoRaJoinAcceptFrame'", field);
     }
 }
 
-const char *LoRaJoinAcceptFrameDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *LoRaJoinAcceptFrameDescriptor::getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldDynamicTypeString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldDynamicTypeString(object,field,i);
+        field -= base->getFieldCount();
     }
-    LoRaJoinAcceptFrame *pp = (LoRaJoinAcceptFrame *)object; (void)pp;
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string LoRaJoinAcceptFrameDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string LoRaJoinAcceptFrameDescriptor::getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldValueAsString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValueAsString(object,field,i);
+        field -= base->getFieldCount();
     }
-    LoRaJoinAcceptFrame *pp = (LoRaJoinAcceptFrame *)object; (void)pp;
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
     switch (field) {
         case FIELD_joinNonce: return ulong2string(pp->getJoinNonce());
         case FIELD_netID: return ulong2string(pp->getNetID(i));
@@ -591,17 +535,17 @@ std::string LoRaJoinAcceptFrameDescriptor::getFieldValueAsString(void *object, i
     }
 }
 
-void LoRaJoinAcceptFrameDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+void LoRaJoinAcceptFrameDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldValueAsString(object, field, i, value);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValueAsString(object, field, i, value);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaJoinAcceptFrame *pp = (LoRaJoinAcceptFrame *)object; (void)pp;
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
     switch (field) {
         case FIELD_joinNonce: pp->setJoinNonce(string2ulong(value)); break;
         case FIELD_netID: pp->setNetID(i,string2ulong(value)); break;
@@ -613,46 +557,92 @@ void LoRaJoinAcceptFrameDescriptor::setFieldValueAsString(void *object, int fiel
     }
 }
 
+omnetpp::cValue LoRaJoinAcceptFrameDescriptor::getFieldValue(omnetpp::any_ptr object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValue(object,field,i);
+        field -= base->getFieldCount();
+    }
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
+    switch (field) {
+        case FIELD_joinNonce: return (omnetpp::intval_t)(pp->getJoinNonce());
+        case FIELD_netID: return (omnetpp::intval_t)(pp->getNetID(i));
+        case FIELD_devAddr: return (omnetpp::intval_t)(pp->getDevAddr(i));
+        case FIELD_DLSettings: return (omnetpp::intval_t)(pp->getDLSettings());
+        case FIELD_RXDelay: return (omnetpp::intval_t)(pp->getRXDelay());
+        case FIELD_CFList: return (omnetpp::intval_t)(pp->getCFList(i));
+        default: throw omnetpp::cRuntimeError("Cannot return field %d of class 'LoRaJoinAcceptFrame' as cValue -- field index out of range?", field);
+    }
+}
+
+void LoRaJoinAcceptFrameDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValue(object, field, i, value);
+            return;
+        }
+        field -= base->getFieldCount();
+    }
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
+    switch (field) {
+        case FIELD_joinNonce: pp->setJoinNonce(omnetpp::checked_int_cast<uint32_t>(value.intValue())); break;
+        case FIELD_netID: pp->setNetID(i,omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_devAddr: pp->setDevAddr(i,omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_DLSettings: pp->setDLSettings(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_RXDelay: pp->setRXDelay(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_CFList: pp->setCFList(i,omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LoRaJoinAcceptFrame'", field);
+    }
+}
+
 const char *LoRaJoinAcceptFrameDescriptor::getFieldStructName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructName(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     };
 }
 
-void *LoRaJoinAcceptFrameDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+omnetpp::any_ptr LoRaJoinAcceptFrameDescriptor::getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructValuePointer(object, field, i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructValuePointer(object, field, i);
+        field -= base->getFieldCount();
     }
-    LoRaJoinAcceptFrame *pp = (LoRaJoinAcceptFrame *)object; (void)pp;
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
     switch (field) {
-        default: return nullptr;
+        default: return omnetpp::any_ptr(nullptr);
     }
 }
 
-void LoRaJoinAcceptFrameDescriptor::setFieldStructValuePointer(void *object, int field, int i, void *ptr) const
+void LoRaJoinAcceptFrameDescriptor::setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldStructValuePointer(object, field, i, ptr);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldStructValuePointer(object, field, i, ptr);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaJoinAcceptFrame *pp = (LoRaJoinAcceptFrame *)object; (void)pp;
+    LoRaJoinAcceptFrame *pp = omnetpp::fromAnyPtr<LoRaJoinAcceptFrame>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LoRaJoinAcceptFrame'", field);
     }
 }
+
+namespace omnetpp {
+
+}  // namespace omnetpp
 
