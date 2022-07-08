@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 6.0 from src/LoRaFrames/LoRaPhysicalFrame.msg.
+// Generated file, do not edit! Created by opp_msgtool 6.0 from src/LoRaFrames/LoRaPhysicalFrame.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -149,64 +149,6 @@ void doParsimUnpacking(omnetpp::cCommBuffer *, T& t)
 }
 
 }  // namespace omnetpp
-
-namespace {
-template <class T> inline
-typename std::enable_if<std::is_polymorphic<T>::value && std::is_base_of<omnetpp::cObject,T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)(static_cast<const omnetpp::cObject *>(t));
-}
-
-template <class T> inline
-typename std::enable_if<std::is_polymorphic<T>::value && !std::is_base_of<omnetpp::cObject,T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)dynamic_cast<const void *>(t);
-}
-
-template <class T> inline
-typename std::enable_if<!std::is_polymorphic<T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)static_cast<const void *>(t);
-}
-
-}
-
-
-// forward
-template<typename T, typename A>
-std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec);
-
-// Template rule to generate operator<< for shared_ptr<T>
-template<typename T>
-inline std::ostream& operator<<(std::ostream& out,const std::shared_ptr<T>& t) { return out << t.get(); }
-
-// Template rule which fires if a struct or class doesn't have operator<<
-template<typename T>
-inline typename std::enable_if<!std::is_base_of<omnetpp::cObject, T>::value, std::ostream&>::type
-operator<<(std::ostream& out,const T&) {const char *s = omnetpp::opp_typename(typeid(T)); out.put('<'); out.write(s, strlen(s)); out.put('>'); return out;}
-
-// operator<< for std::vector<T>
-template<typename T, typename A>
-inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
-{
-    out.put('{');
-    for(typename std::vector<T,A>::const_iterator it = vec.begin(); it != vec.end(); ++it)
-    {
-        if (it != vec.begin()) {
-            out.put(','); out.put(' ');
-        }
-        out << *it;
-    }
-    out.put('}');
-
-    char buf[32];
-    sprintf(buf, " (size=%u)", (unsigned int)vec.size());
-    out.write(buf, strlen(buf));
-    return out;
-}
 
 Register_Class(LoRaPhysicalFrame)
 
@@ -416,13 +358,13 @@ size_t LoRaPhysicalFrame::getPayloadArraySize() const
 
 uint8_t LoRaPhysicalFrame::getPayload(size_t k) const
 {
-    if (k >= 59) throw omnetpp::cRuntimeError("Array of size 59 indexed by %lu", (unsigned long)k);
+    if (k >= 59) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)59, (unsigned long)k);
     return this->payload[k];
 }
 
 void LoRaPhysicalFrame::setPayload(size_t k, uint8_t payload)
 {
-    if (k >= 59) throw omnetpp::cRuntimeError("Array of size 59 indexed by %lu", (unsigned long)k);
+    if (k >= 59) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)59, (unsigned long)k);
     this->payload[k] = payload;
 }
 
@@ -439,7 +381,7 @@ void LoRaPhysicalFrame::setPayloadCRC(uint16_t payloadCRC)
 class LoRaPhysicalFrameDescriptor : public omnetpp::cClassDescriptor
 {
   private:
-    mutable const char **propertynames;
+    mutable const char **propertyNames;
     enum FieldConstants {
         FIELD_preamble,
         FIELD_syncWord,
@@ -462,36 +404,38 @@ class LoRaPhysicalFrameDescriptor : public omnetpp::cClassDescriptor
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
-    virtual const char *getProperty(const char *propertyname) const override;
+    virtual const char *getProperty(const char *propertyName) const override;
     virtual int getFieldCount() const override;
     virtual const char *getFieldName(int field) const override;
     virtual int findField(const char *fieldName) const override;
     virtual unsigned int getFieldTypeFlags(int field) const override;
     virtual const char *getFieldTypeString(int field) const override;
     virtual const char **getFieldPropertyNames(int field) const override;
-    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
-    virtual int getFieldArraySize(void *object, int field) const override;
-    virtual void setFieldArraySize(void *object, int field, int size) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyName) const override;
+    virtual int getFieldArraySize(omnetpp::any_ptr object, int field) const override;
+    virtual void setFieldArraySize(omnetpp::any_ptr object, int field, int size) const override;
 
-    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
-    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
-    virtual void setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+    virtual const char *getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const override;
+    virtual omnetpp::cValue getFieldValue(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const override;
 
     virtual const char *getFieldStructName(int field) const override;
-    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
-    virtual void setFieldStructValuePointer(void *object, int field, int i, void *ptr) const override;
+    virtual omnetpp::any_ptr getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const override;
 };
 
 Register_ClassDescriptor(LoRaPhysicalFrameDescriptor)
 
 LoRaPhysicalFrameDescriptor::LoRaPhysicalFrameDescriptor() : omnetpp::cClassDescriptor(omnetpp::opp_typename(typeid(LoRaPhysicalFrame)), "omnetpp::cPacket")
 {
-    propertynames = nullptr;
+    propertyNames = nullptr;
 }
 
 LoRaPhysicalFrameDescriptor::~LoRaPhysicalFrameDescriptor()
 {
-    delete[] propertynames;
+    delete[] propertyNames;
 }
 
 bool LoRaPhysicalFrameDescriptor::doesSupport(omnetpp::cObject *obj) const
@@ -501,34 +445,34 @@ bool LoRaPhysicalFrameDescriptor::doesSupport(omnetpp::cObject *obj) const
 
 const char **LoRaPhysicalFrameDescriptor::getPropertyNames() const
 {
-    if (!propertynames) {
+    if (!propertyNames) {
         static const char *names[] = {  nullptr };
-        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
-        propertynames = mergeLists(basenames, names);
+        omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+        const char **baseNames = base ? base->getPropertyNames() : nullptr;
+        propertyNames = mergeLists(baseNames, names);
     }
-    return propertynames;
+    return propertyNames;
 }
 
-const char *LoRaPhysicalFrameDescriptor::getProperty(const char *propertyname) const
+const char *LoRaPhysicalFrameDescriptor::getProperty(const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? base->getProperty(propertyName) : nullptr;
 }
 
 int LoRaPhysicalFrameDescriptor::getFieldCount() const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 14+basedesc->getFieldCount() : 14;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? 14+base->getFieldCount() : 14;
 }
 
 unsigned int LoRaPhysicalFrameDescriptor::getFieldTypeFlags(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeFlags(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeFlags(field);
+        field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,    // FIELD_preamble
@@ -551,11 +495,11 @@ unsigned int LoRaPhysicalFrameDescriptor::getFieldTypeFlags(int field) const
 
 const char *LoRaPhysicalFrameDescriptor::getFieldName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldName(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldNames[] = {
         "preamble",
@@ -578,32 +522,32 @@ const char *LoRaPhysicalFrameDescriptor::getFieldName(int field) const
 
 int LoRaPhysicalFrameDescriptor::findField(const char *fieldName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0] == 'p' && strcmp(fieldName, "preamble") == 0) return base+0;
-    if (fieldName[0] == 's' && strcmp(fieldName, "syncWord") == 0) return base+1;
-    if (fieldName[0] == 'p' && strcmp(fieldName, "payloadLength") == 0) return base+2;
-    if (fieldName[0] == 'F' && strcmp(fieldName, "FECRate") == 0) return base+3;
-    if (fieldName[0] == 'C' && strcmp(fieldName, "CRCPresence") == 0) return base+4;
-    if (fieldName[0] == 'h' && strcmp(fieldName, "headerCRC") == 0) return base+5;
-    if (fieldName[0] == 't' && strcmp(fieldName, "transmissionPower") == 0) return base+6;
-    if (fieldName[0] == 'c' && strcmp(fieldName, "channelFrequency") == 0) return base+7;
-    if (fieldName[0] == 'c' && strcmp(fieldName, "codingRate") == 0) return base+8;
-    if (fieldName[0] == 's' && strcmp(fieldName, "spreadingFactor") == 0) return base+9;
-    if (fieldName[0] == 'b' && strcmp(fieldName, "bandwidth") == 0) return base+10;
-    if (fieldName[0] == 'I' && strcmp(fieldName, "IQPolarizationInverted") == 0) return base+11;
-    if (fieldName[0] == 'p' && strcmp(fieldName, "payload") == 0) return base+12;
-    if (fieldName[0] == 'p' && strcmp(fieldName, "payloadCRC") == 0) return base+13;
-    return basedesc ? basedesc->findField(fieldName) : -1;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    int baseIndex = base ? base->getFieldCount() : 0;
+    if (strcmp(fieldName, "preamble") == 0) return baseIndex + 0;
+    if (strcmp(fieldName, "syncWord") == 0) return baseIndex + 1;
+    if (strcmp(fieldName, "payloadLength") == 0) return baseIndex + 2;
+    if (strcmp(fieldName, "FECRate") == 0) return baseIndex + 3;
+    if (strcmp(fieldName, "CRCPresence") == 0) return baseIndex + 4;
+    if (strcmp(fieldName, "headerCRC") == 0) return baseIndex + 5;
+    if (strcmp(fieldName, "transmissionPower") == 0) return baseIndex + 6;
+    if (strcmp(fieldName, "channelFrequency") == 0) return baseIndex + 7;
+    if (strcmp(fieldName, "codingRate") == 0) return baseIndex + 8;
+    if (strcmp(fieldName, "spreadingFactor") == 0) return baseIndex + 9;
+    if (strcmp(fieldName, "bandwidth") == 0) return baseIndex + 10;
+    if (strcmp(fieldName, "IQPolarizationInverted") == 0) return baseIndex + 11;
+    if (strcmp(fieldName, "payload") == 0) return baseIndex + 12;
+    if (strcmp(fieldName, "payloadCRC") == 0) return baseIndex + 13;
+    return base ? base->findField(fieldName) : -1;
 }
 
 const char *LoRaPhysicalFrameDescriptor::getFieldTypeString(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeString(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeString(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
         "uint32_t",    // FIELD_preamble
@@ -626,84 +570,84 @@ const char *LoRaPhysicalFrameDescriptor::getFieldTypeString(int field) const
 
 const char **LoRaPhysicalFrameDescriptor::getFieldPropertyNames(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldPropertyNames(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldPropertyNames(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-const char *LoRaPhysicalFrameDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *LoRaPhysicalFrameDescriptor::getFieldProperty(int field, const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldProperty(field, propertyname);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldProperty(field, propertyName);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-int LoRaPhysicalFrameDescriptor::getFieldArraySize(void *object, int field) const
+int LoRaPhysicalFrameDescriptor::getFieldArraySize(omnetpp::any_ptr object, int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldArraySize(object, field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldArraySize(object, field);
+        field -= base->getFieldCount();
     }
-    LoRaPhysicalFrame *pp = (LoRaPhysicalFrame *)object; (void)pp;
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
     switch (field) {
         case FIELD_payload: return 59;
         default: return 0;
     }
 }
 
-void LoRaPhysicalFrameDescriptor::setFieldArraySize(void *object, int field, int size) const
+void LoRaPhysicalFrameDescriptor::setFieldArraySize(omnetpp::any_ptr object, int field, int size) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldArraySize(object, field, size);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldArraySize(object, field, size);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaPhysicalFrame *pp = (LoRaPhysicalFrame *)object; (void)pp;
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set array size of field %d of class 'LoRaPhysicalFrame'", field);
     }
 }
 
-const char *LoRaPhysicalFrameDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *LoRaPhysicalFrameDescriptor::getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldDynamicTypeString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldDynamicTypeString(object,field,i);
+        field -= base->getFieldCount();
     }
-    LoRaPhysicalFrame *pp = (LoRaPhysicalFrame *)object; (void)pp;
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string LoRaPhysicalFrameDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string LoRaPhysicalFrameDescriptor::getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldValueAsString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValueAsString(object,field,i);
+        field -= base->getFieldCount();
     }
-    LoRaPhysicalFrame *pp = (LoRaPhysicalFrame *)object; (void)pp;
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
     switch (field) {
         case FIELD_preamble: return ulong2string(pp->getPreamble());
         case FIELD_syncWord: return ulong2string(pp->getSyncWord());
@@ -723,17 +667,17 @@ std::string LoRaPhysicalFrameDescriptor::getFieldValueAsString(void *object, int
     }
 }
 
-void LoRaPhysicalFrameDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+void LoRaPhysicalFrameDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldValueAsString(object, field, i, value);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValueAsString(object, field, i, value);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaPhysicalFrame *pp = (LoRaPhysicalFrame *)object; (void)pp;
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
     switch (field) {
         case FIELD_preamble: pp->setPreamble(string2ulong(value)); break;
         case FIELD_syncWord: pp->setSyncWord(string2ulong(value)); break;
@@ -753,46 +697,108 @@ void LoRaPhysicalFrameDescriptor::setFieldValueAsString(void *object, int field,
     }
 }
 
+omnetpp::cValue LoRaPhysicalFrameDescriptor::getFieldValue(omnetpp::any_ptr object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValue(object,field,i);
+        field -= base->getFieldCount();
+    }
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
+    switch (field) {
+        case FIELD_preamble: return (omnetpp::intval_t)(pp->getPreamble());
+        case FIELD_syncWord: return (omnetpp::intval_t)(pp->getSyncWord());
+        case FIELD_payloadLength: return (omnetpp::intval_t)(pp->getPayloadLength());
+        case FIELD_FECRate: return (omnetpp::intval_t)(pp->getFECRate());
+        case FIELD_CRCPresence: return pp->getCRCPresence();
+        case FIELD_headerCRC: return (omnetpp::intval_t)(pp->getHeaderCRC());
+        case FIELD_transmissionPower: return (omnetpp::intval_t)(pp->getTransmissionPower());
+        case FIELD_channelFrequency: return (double)(pp->getChannelFrequency());
+        case FIELD_codingRate: return (omnetpp::intval_t)(pp->getCodingRate());
+        case FIELD_spreadingFactor: return (omnetpp::intval_t)(pp->getSpreadingFactor());
+        case FIELD_bandwidth: return (double)(pp->getBandwidth());
+        case FIELD_IQPolarizationInverted: return pp->getIQPolarizationInverted();
+        case FIELD_payload: return (omnetpp::intval_t)(pp->getPayload(i));
+        case FIELD_payloadCRC: return (omnetpp::intval_t)(pp->getPayloadCRC());
+        default: throw omnetpp::cRuntimeError("Cannot return field %d of class 'LoRaPhysicalFrame' as cValue -- field index out of range?", field);
+    }
+}
+
+void LoRaPhysicalFrameDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValue(object, field, i, value);
+            return;
+        }
+        field -= base->getFieldCount();
+    }
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
+    switch (field) {
+        case FIELD_preamble: pp->setPreamble(omnetpp::checked_int_cast<uint32_t>(value.intValue())); break;
+        case FIELD_syncWord: pp->setSyncWord(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        case FIELD_payloadLength: pp->setPayloadLength(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_FECRate: pp->setFECRate(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_CRCPresence: pp->setCRCPresence(value.boolValue()); break;
+        case FIELD_headerCRC: pp->setHeaderCRC(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        case FIELD_transmissionPower: pp->setTransmissionPower(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_channelFrequency: pp->setChannelFrequency(static_cast<float>(value.doubleValue())); break;
+        case FIELD_codingRate: pp->setCodingRate(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_spreadingFactor: pp->setSpreadingFactor(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_bandwidth: pp->setBandwidth(static_cast<float>(value.doubleValue())); break;
+        case FIELD_IQPolarizationInverted: pp->setIQPolarizationInverted(value.boolValue()); break;
+        case FIELD_payload: pp->setPayload(i,omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_payloadCRC: pp->setPayloadCRC(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LoRaPhysicalFrame'", field);
+    }
+}
+
 const char *LoRaPhysicalFrameDescriptor::getFieldStructName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructName(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     };
 }
 
-void *LoRaPhysicalFrameDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+omnetpp::any_ptr LoRaPhysicalFrameDescriptor::getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructValuePointer(object, field, i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructValuePointer(object, field, i);
+        field -= base->getFieldCount();
     }
-    LoRaPhysicalFrame *pp = (LoRaPhysicalFrame *)object; (void)pp;
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
     switch (field) {
-        default: return nullptr;
+        default: return omnetpp::any_ptr(nullptr);
     }
 }
 
-void LoRaPhysicalFrameDescriptor::setFieldStructValuePointer(void *object, int field, int i, void *ptr) const
+void LoRaPhysicalFrameDescriptor::setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldStructValuePointer(object, field, i, ptr);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldStructValuePointer(object, field, i, ptr);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaPhysicalFrame *pp = (LoRaPhysicalFrame *)object; (void)pp;
+    LoRaPhysicalFrame *pp = omnetpp::fromAnyPtr<LoRaPhysicalFrame>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LoRaPhysicalFrame'", field);
     }
 }
+
+namespace omnetpp {
+
+}  // namespace omnetpp
 

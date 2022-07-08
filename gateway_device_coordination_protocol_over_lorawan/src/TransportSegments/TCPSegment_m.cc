@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 6.0 from src/TransportSegments/TCPSegment.msg.
+// Generated file, do not edit! Created by opp_msgtool 6.0 from src/TransportSegments/TCPSegment.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -149,64 +149,6 @@ void doParsimUnpacking(omnetpp::cCommBuffer *, T& t)
 }
 
 }  // namespace omnetpp
-
-namespace {
-template <class T> inline
-typename std::enable_if<std::is_polymorphic<T>::value && std::is_base_of<omnetpp::cObject,T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)(static_cast<const omnetpp::cObject *>(t));
-}
-
-template <class T> inline
-typename std::enable_if<std::is_polymorphic<T>::value && !std::is_base_of<omnetpp::cObject,T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)dynamic_cast<const void *>(t);
-}
-
-template <class T> inline
-typename std::enable_if<!std::is_polymorphic<T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)static_cast<const void *>(t);
-}
-
-}
-
-
-// forward
-template<typename T, typename A>
-std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec);
-
-// Template rule to generate operator<< for shared_ptr<T>
-template<typename T>
-inline std::ostream& operator<<(std::ostream& out,const std::shared_ptr<T>& t) { return out << t.get(); }
-
-// Template rule which fires if a struct or class doesn't have operator<<
-template<typename T>
-inline typename std::enable_if<!std::is_base_of<omnetpp::cObject, T>::value, std::ostream&>::type
-operator<<(std::ostream& out,const T&) {const char *s = omnetpp::opp_typename(typeid(T)); out.put('<'); out.write(s, strlen(s)); out.put('>'); return out;}
-
-// operator<< for std::vector<T>
-template<typename T, typename A>
-inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
-{
-    out.put('{');
-    for(typename std::vector<T,A>::const_iterator it = vec.begin(); it != vec.end(); ++it)
-    {
-        if (it != vec.begin()) {
-            out.put(','); out.put(' ');
-        }
-        out << *it;
-    }
-    out.put('}');
-
-    char buf[32];
-    sprintf(buf, " (size=%u)", (unsigned int)vec.size());
-    out.write(buf, strlen(buf));
-    return out;
-}
 
 Register_Class(TCPSegment)
 
@@ -491,20 +433,20 @@ size_t TCPSegment::getOptionsArraySize() const
 
 uint8_t TCPSegment::getOptions(size_t k) const
 {
-    if (k >= 40) throw omnetpp::cRuntimeError("Array of size 40 indexed by %lu", (unsigned long)k);
+    if (k >= 40) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)40, (unsigned long)k);
     return this->options[k];
 }
 
 void TCPSegment::setOptions(size_t k, uint8_t options)
 {
-    if (k >= 40) throw omnetpp::cRuntimeError("Array of size 40 indexed by %lu", (unsigned long)k);
+    if (k >= 40) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)40, (unsigned long)k);
     this->options[k] = options;
 }
 
 class TCPSegmentDescriptor : public omnetpp::cClassDescriptor
 {
   private:
-    mutable const char **propertynames;
+    mutable const char **propertyNames;
     enum FieldConstants {
         FIELD_srcPort,
         FIELD_destPort,
@@ -532,36 +474,38 @@ class TCPSegmentDescriptor : public omnetpp::cClassDescriptor
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
-    virtual const char *getProperty(const char *propertyname) const override;
+    virtual const char *getProperty(const char *propertyName) const override;
     virtual int getFieldCount() const override;
     virtual const char *getFieldName(int field) const override;
     virtual int findField(const char *fieldName) const override;
     virtual unsigned int getFieldTypeFlags(int field) const override;
     virtual const char *getFieldTypeString(int field) const override;
     virtual const char **getFieldPropertyNames(int field) const override;
-    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
-    virtual int getFieldArraySize(void *object, int field) const override;
-    virtual void setFieldArraySize(void *object, int field, int size) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyName) const override;
+    virtual int getFieldArraySize(omnetpp::any_ptr object, int field) const override;
+    virtual void setFieldArraySize(omnetpp::any_ptr object, int field, int size) const override;
 
-    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
-    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
-    virtual void setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+    virtual const char *getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const override;
+    virtual omnetpp::cValue getFieldValue(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const override;
 
     virtual const char *getFieldStructName(int field) const override;
-    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
-    virtual void setFieldStructValuePointer(void *object, int field, int i, void *ptr) const override;
+    virtual omnetpp::any_ptr getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const override;
 };
 
 Register_ClassDescriptor(TCPSegmentDescriptor)
 
 TCPSegmentDescriptor::TCPSegmentDescriptor() : omnetpp::cClassDescriptor(omnetpp::opp_typename(typeid(TCPSegment)), "omnetpp::cPacket")
 {
-    propertynames = nullptr;
+    propertyNames = nullptr;
 }
 
 TCPSegmentDescriptor::~TCPSegmentDescriptor()
 {
-    delete[] propertynames;
+    delete[] propertyNames;
 }
 
 bool TCPSegmentDescriptor::doesSupport(omnetpp::cObject *obj) const
@@ -571,34 +515,34 @@ bool TCPSegmentDescriptor::doesSupport(omnetpp::cObject *obj) const
 
 const char **TCPSegmentDescriptor::getPropertyNames() const
 {
-    if (!propertynames) {
+    if (!propertyNames) {
         static const char *names[] = {  nullptr };
-        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
-        propertynames = mergeLists(basenames, names);
+        omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+        const char **baseNames = base ? base->getPropertyNames() : nullptr;
+        propertyNames = mergeLists(baseNames, names);
     }
-    return propertynames;
+    return propertyNames;
 }
 
-const char *TCPSegmentDescriptor::getProperty(const char *propertyname) const
+const char *TCPSegmentDescriptor::getProperty(const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? base->getProperty(propertyName) : nullptr;
 }
 
 int TCPSegmentDescriptor::getFieldCount() const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 19+basedesc->getFieldCount() : 19;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? 19+base->getFieldCount() : 19;
 }
 
 unsigned int TCPSegmentDescriptor::getFieldTypeFlags(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeFlags(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeFlags(field);
+        field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,    // FIELD_srcPort
@@ -626,11 +570,11 @@ unsigned int TCPSegmentDescriptor::getFieldTypeFlags(int field) const
 
 const char *TCPSegmentDescriptor::getFieldName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldName(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldNames[] = {
         "srcPort",
@@ -658,37 +602,37 @@ const char *TCPSegmentDescriptor::getFieldName(int field) const
 
 int TCPSegmentDescriptor::findField(const char *fieldName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0] == 's' && strcmp(fieldName, "srcPort") == 0) return base+0;
-    if (fieldName[0] == 'd' && strcmp(fieldName, "destPort") == 0) return base+1;
-    if (fieldName[0] == 's' && strcmp(fieldName, "sequenceNumber") == 0) return base+2;
-    if (fieldName[0] == 'A' && strcmp(fieldName, "ACKnumber") == 0) return base+3;
-    if (fieldName[0] == 'd' && strcmp(fieldName, "dataOffset") == 0) return base+4;
-    if (fieldName[0] == 'r' && strcmp(fieldName, "reserved") == 0) return base+5;
-    if (fieldName[0] == 'N' && strcmp(fieldName, "NS") == 0) return base+6;
-    if (fieldName[0] == 'C' && strcmp(fieldName, "CWR") == 0) return base+7;
-    if (fieldName[0] == 'E' && strcmp(fieldName, "ECE") == 0) return base+8;
-    if (fieldName[0] == 'U' && strcmp(fieldName, "URG") == 0) return base+9;
-    if (fieldName[0] == 'A' && strcmp(fieldName, "ACK") == 0) return base+10;
-    if (fieldName[0] == 'P' && strcmp(fieldName, "PSH") == 0) return base+11;
-    if (fieldName[0] == 'R' && strcmp(fieldName, "RST") == 0) return base+12;
-    if (fieldName[0] == 'S' && strcmp(fieldName, "SYN") == 0) return base+13;
-    if (fieldName[0] == 'F' && strcmp(fieldName, "FIN") == 0) return base+14;
-    if (fieldName[0] == 'w' && strcmp(fieldName, "windowSize") == 0) return base+15;
-    if (fieldName[0] == 'c' && strcmp(fieldName, "checksum") == 0) return base+16;
-    if (fieldName[0] == 'u' && strcmp(fieldName, "urgentPointer") == 0) return base+17;
-    if (fieldName[0] == 'o' && strcmp(fieldName, "options") == 0) return base+18;
-    return basedesc ? basedesc->findField(fieldName) : -1;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    int baseIndex = base ? base->getFieldCount() : 0;
+    if (strcmp(fieldName, "srcPort") == 0) return baseIndex + 0;
+    if (strcmp(fieldName, "destPort") == 0) return baseIndex + 1;
+    if (strcmp(fieldName, "sequenceNumber") == 0) return baseIndex + 2;
+    if (strcmp(fieldName, "ACKnumber") == 0) return baseIndex + 3;
+    if (strcmp(fieldName, "dataOffset") == 0) return baseIndex + 4;
+    if (strcmp(fieldName, "reserved") == 0) return baseIndex + 5;
+    if (strcmp(fieldName, "NS") == 0) return baseIndex + 6;
+    if (strcmp(fieldName, "CWR") == 0) return baseIndex + 7;
+    if (strcmp(fieldName, "ECE") == 0) return baseIndex + 8;
+    if (strcmp(fieldName, "URG") == 0) return baseIndex + 9;
+    if (strcmp(fieldName, "ACK") == 0) return baseIndex + 10;
+    if (strcmp(fieldName, "PSH") == 0) return baseIndex + 11;
+    if (strcmp(fieldName, "RST") == 0) return baseIndex + 12;
+    if (strcmp(fieldName, "SYN") == 0) return baseIndex + 13;
+    if (strcmp(fieldName, "FIN") == 0) return baseIndex + 14;
+    if (strcmp(fieldName, "windowSize") == 0) return baseIndex + 15;
+    if (strcmp(fieldName, "checksum") == 0) return baseIndex + 16;
+    if (strcmp(fieldName, "urgentPointer") == 0) return baseIndex + 17;
+    if (strcmp(fieldName, "options") == 0) return baseIndex + 18;
+    return base ? base->findField(fieldName) : -1;
 }
 
 const char *TCPSegmentDescriptor::getFieldTypeString(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeString(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeString(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
         "uint16_t",    // FIELD_srcPort
@@ -716,84 +660,84 @@ const char *TCPSegmentDescriptor::getFieldTypeString(int field) const
 
 const char **TCPSegmentDescriptor::getFieldPropertyNames(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldPropertyNames(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldPropertyNames(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-const char *TCPSegmentDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *TCPSegmentDescriptor::getFieldProperty(int field, const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldProperty(field, propertyname);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldProperty(field, propertyName);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-int TCPSegmentDescriptor::getFieldArraySize(void *object, int field) const
+int TCPSegmentDescriptor::getFieldArraySize(omnetpp::any_ptr object, int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldArraySize(object, field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldArraySize(object, field);
+        field -= base->getFieldCount();
     }
-    TCPSegment *pp = (TCPSegment *)object; (void)pp;
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
     switch (field) {
         case FIELD_options: return 40;
         default: return 0;
     }
 }
 
-void TCPSegmentDescriptor::setFieldArraySize(void *object, int field, int size) const
+void TCPSegmentDescriptor::setFieldArraySize(omnetpp::any_ptr object, int field, int size) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldArraySize(object, field, size);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldArraySize(object, field, size);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    TCPSegment *pp = (TCPSegment *)object; (void)pp;
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set array size of field %d of class 'TCPSegment'", field);
     }
 }
 
-const char *TCPSegmentDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *TCPSegmentDescriptor::getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldDynamicTypeString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldDynamicTypeString(object,field,i);
+        field -= base->getFieldCount();
     }
-    TCPSegment *pp = (TCPSegment *)object; (void)pp;
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string TCPSegmentDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string TCPSegmentDescriptor::getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldValueAsString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValueAsString(object,field,i);
+        field -= base->getFieldCount();
     }
-    TCPSegment *pp = (TCPSegment *)object; (void)pp;
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
     switch (field) {
         case FIELD_srcPort: return ulong2string(pp->getSrcPort());
         case FIELD_destPort: return ulong2string(pp->getDestPort());
@@ -818,17 +762,17 @@ std::string TCPSegmentDescriptor::getFieldValueAsString(void *object, int field,
     }
 }
 
-void TCPSegmentDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+void TCPSegmentDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldValueAsString(object, field, i, value);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValueAsString(object, field, i, value);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    TCPSegment *pp = (TCPSegment *)object; (void)pp;
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
     switch (field) {
         case FIELD_srcPort: pp->setSrcPort(string2ulong(value)); break;
         case FIELD_destPort: pp->setDestPort(string2ulong(value)); break;
@@ -853,46 +797,118 @@ void TCPSegmentDescriptor::setFieldValueAsString(void *object, int field, int i,
     }
 }
 
+omnetpp::cValue TCPSegmentDescriptor::getFieldValue(omnetpp::any_ptr object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValue(object,field,i);
+        field -= base->getFieldCount();
+    }
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
+    switch (field) {
+        case FIELD_srcPort: return (omnetpp::intval_t)(pp->getSrcPort());
+        case FIELD_destPort: return (omnetpp::intval_t)(pp->getDestPort());
+        case FIELD_sequenceNumber: return (omnetpp::intval_t)(pp->getSequenceNumber());
+        case FIELD_ACKnumber: return (omnetpp::intval_t)(pp->getACKnumber());
+        case FIELD_dataOffset: return (omnetpp::intval_t)(pp->getDataOffset());
+        case FIELD_reserved: return (omnetpp::intval_t)(pp->getReserved());
+        case FIELD_NS: return pp->getNS();
+        case FIELD_CWR: return pp->getCWR();
+        case FIELD_ECE: return pp->getECE();
+        case FIELD_URG: return pp->getURG();
+        case FIELD_ACK: return pp->getACK();
+        case FIELD_PSH: return pp->getPSH();
+        case FIELD_RST: return pp->getRST();
+        case FIELD_SYN: return pp->getSYN();
+        case FIELD_FIN: return pp->getFIN();
+        case FIELD_windowSize: return (omnetpp::intval_t)(pp->getWindowSize());
+        case FIELD_checksum: return (omnetpp::intval_t)(pp->getChecksum());
+        case FIELD_urgentPointer: return (omnetpp::intval_t)(pp->getUrgentPointer());
+        case FIELD_options: return (omnetpp::intval_t)(pp->getOptions(i));
+        default: throw omnetpp::cRuntimeError("Cannot return field %d of class 'TCPSegment' as cValue -- field index out of range?", field);
+    }
+}
+
+void TCPSegmentDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValue(object, field, i, value);
+            return;
+        }
+        field -= base->getFieldCount();
+    }
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
+    switch (field) {
+        case FIELD_srcPort: pp->setSrcPort(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        case FIELD_destPort: pp->setDestPort(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        case FIELD_sequenceNumber: pp->setSequenceNumber(omnetpp::checked_int_cast<uint32_t>(value.intValue())); break;
+        case FIELD_ACKnumber: pp->setACKnumber(omnetpp::checked_int_cast<uint32_t>(value.intValue())); break;
+        case FIELD_dataOffset: pp->setDataOffset(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_reserved: pp->setReserved(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_NS: pp->setNS(value.boolValue()); break;
+        case FIELD_CWR: pp->setCWR(value.boolValue()); break;
+        case FIELD_ECE: pp->setECE(value.boolValue()); break;
+        case FIELD_URG: pp->setURG(value.boolValue()); break;
+        case FIELD_ACK: pp->setACK(value.boolValue()); break;
+        case FIELD_PSH: pp->setPSH(value.boolValue()); break;
+        case FIELD_RST: pp->setRST(value.boolValue()); break;
+        case FIELD_SYN: pp->setSYN(value.boolValue()); break;
+        case FIELD_FIN: pp->setFIN(value.boolValue()); break;
+        case FIELD_windowSize: pp->setWindowSize(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        case FIELD_checksum: pp->setChecksum(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        case FIELD_urgentPointer: pp->setUrgentPointer(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        case FIELD_options: pp->setOptions(i,omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'TCPSegment'", field);
+    }
+}
+
 const char *TCPSegmentDescriptor::getFieldStructName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructName(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     };
 }
 
-void *TCPSegmentDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+omnetpp::any_ptr TCPSegmentDescriptor::getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructValuePointer(object, field, i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructValuePointer(object, field, i);
+        field -= base->getFieldCount();
     }
-    TCPSegment *pp = (TCPSegment *)object; (void)pp;
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
     switch (field) {
-        default: return nullptr;
+        default: return omnetpp::any_ptr(nullptr);
     }
 }
 
-void TCPSegmentDescriptor::setFieldStructValuePointer(void *object, int field, int i, void *ptr) const
+void TCPSegmentDescriptor::setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldStructValuePointer(object, field, i, ptr);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldStructValuePointer(object, field, i, ptr);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    TCPSegment *pp = (TCPSegment *)object; (void)pp;
+    TCPSegment *pp = omnetpp::fromAnyPtr<TCPSegment>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'TCPSegment'", field);
     }
 }
+
+namespace omnetpp {
+
+}  // namespace omnetpp
 

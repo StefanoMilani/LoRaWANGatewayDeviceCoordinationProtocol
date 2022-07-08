@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 6.0 from src/LoRaFrames/LoRaAppUplinkFrame.msg.
+// Generated file, do not edit! Created by opp_msgtool 6.0 from src/LoRaFrames/LoRaAppUplinkFrame.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -150,64 +150,6 @@ void doParsimUnpacking(omnetpp::cCommBuffer *, T& t)
 
 }  // namespace omnetpp
 
-namespace {
-template <class T> inline
-typename std::enable_if<std::is_polymorphic<T>::value && std::is_base_of<omnetpp::cObject,T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)(static_cast<const omnetpp::cObject *>(t));
-}
-
-template <class T> inline
-typename std::enable_if<std::is_polymorphic<T>::value && !std::is_base_of<omnetpp::cObject,T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)dynamic_cast<const void *>(t);
-}
-
-template <class T> inline
-typename std::enable_if<!std::is_polymorphic<T>::value, void *>::type
-toVoidPtr(T* t)
-{
-    return (void *)static_cast<const void *>(t);
-}
-
-}
-
-
-// forward
-template<typename T, typename A>
-std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec);
-
-// Template rule to generate operator<< for shared_ptr<T>
-template<typename T>
-inline std::ostream& operator<<(std::ostream& out,const std::shared_ptr<T>& t) { return out << t.get(); }
-
-// Template rule which fires if a struct or class doesn't have operator<<
-template<typename T>
-inline typename std::enable_if<!std::is_base_of<omnetpp::cObject, T>::value, std::ostream&>::type
-operator<<(std::ostream& out,const T&) {const char *s = omnetpp::opp_typename(typeid(T)); out.put('<'); out.write(s, strlen(s)); out.put('>'); return out;}
-
-// operator<< for std::vector<T>
-template<typename T, typename A>
-inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
-{
-    out.put('{');
-    for(typename std::vector<T,A>::const_iterator it = vec.begin(); it != vec.end(); ++it)
-    {
-        if (it != vec.begin()) {
-            out.put(','); out.put(' ');
-        }
-        out << *it;
-    }
-    out.put('}');
-
-    char buf[32];
-    sprintf(buf, " (size=%u)", (unsigned int)vec.size());
-    out.write(buf, strlen(buf));
-    return out;
-}
-
 LoRaControlUplink::LoRaControlUplink()
 {
     for (size_t i = 0; i < 4; i++)
@@ -235,7 +177,7 @@ void __doUnpacking(omnetpp::cCommBuffer *b, LoRaControlUplink& a)
 class LoRaControlUplinkDescriptor : public omnetpp::cClassDescriptor
 {
   private:
-    mutable const char **propertynames;
+    mutable const char **propertyNames;
     enum FieldConstants {
         FIELD_FOptsLen,
         FIELD_ClassB,
@@ -249,36 +191,38 @@ class LoRaControlUplinkDescriptor : public omnetpp::cClassDescriptor
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
-    virtual const char *getProperty(const char *propertyname) const override;
+    virtual const char *getProperty(const char *propertyName) const override;
     virtual int getFieldCount() const override;
     virtual const char *getFieldName(int field) const override;
     virtual int findField(const char *fieldName) const override;
     virtual unsigned int getFieldTypeFlags(int field) const override;
     virtual const char *getFieldTypeString(int field) const override;
     virtual const char **getFieldPropertyNames(int field) const override;
-    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
-    virtual int getFieldArraySize(void *object, int field) const override;
-    virtual void setFieldArraySize(void *object, int field, int size) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyName) const override;
+    virtual int getFieldArraySize(omnetpp::any_ptr object, int field) const override;
+    virtual void setFieldArraySize(omnetpp::any_ptr object, int field, int size) const override;
 
-    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
-    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
-    virtual void setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+    virtual const char *getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const override;
+    virtual omnetpp::cValue getFieldValue(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const override;
 
     virtual const char *getFieldStructName(int field) const override;
-    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
-    virtual void setFieldStructValuePointer(void *object, int field, int i, void *ptr) const override;
+    virtual omnetpp::any_ptr getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const override;
 };
 
 Register_ClassDescriptor(LoRaControlUplinkDescriptor)
 
 LoRaControlUplinkDescriptor::LoRaControlUplinkDescriptor() : omnetpp::cClassDescriptor(omnetpp::opp_typename(typeid(LoRaControlUplink)), "")
 {
-    propertynames = nullptr;
+    propertyNames = nullptr;
 }
 
 LoRaControlUplinkDescriptor::~LoRaControlUplinkDescriptor()
 {
-    delete[] propertynames;
+    delete[] propertyNames;
 }
 
 bool LoRaControlUplinkDescriptor::doesSupport(omnetpp::cObject *obj) const
@@ -288,34 +232,34 @@ bool LoRaControlUplinkDescriptor::doesSupport(omnetpp::cObject *obj) const
 
 const char **LoRaControlUplinkDescriptor::getPropertyNames() const
 {
-    if (!propertynames) {
+    if (!propertyNames) {
         static const char *names[] = {  nullptr };
-        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
-        propertynames = mergeLists(basenames, names);
+        omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+        const char **baseNames = base ? base->getPropertyNames() : nullptr;
+        propertyNames = mergeLists(baseNames, names);
     }
-    return propertynames;
+    return propertyNames;
 }
 
-const char *LoRaControlUplinkDescriptor::getProperty(const char *propertyname) const
+const char *LoRaControlUplinkDescriptor::getProperty(const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? base->getProperty(propertyName) : nullptr;
 }
 
 int LoRaControlUplinkDescriptor::getFieldCount() const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 5+basedesc->getFieldCount() : 5;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? 5+base->getFieldCount() : 5;
 }
 
 unsigned int LoRaControlUplinkDescriptor::getFieldTypeFlags(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeFlags(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeFlags(field);
+        field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISARRAY | FD_ISEDITABLE,    // FIELD_FOptsLen
@@ -329,11 +273,11 @@ unsigned int LoRaControlUplinkDescriptor::getFieldTypeFlags(int field) const
 
 const char *LoRaControlUplinkDescriptor::getFieldName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldName(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldNames[] = {
         "FOptsLen",
@@ -347,23 +291,23 @@ const char *LoRaControlUplinkDescriptor::getFieldName(int field) const
 
 int LoRaControlUplinkDescriptor::findField(const char *fieldName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0] == 'F' && strcmp(fieldName, "FOptsLen") == 0) return base+0;
-    if (fieldName[0] == 'C' && strcmp(fieldName, "ClassB") == 0) return base+1;
-    if (fieldName[0] == 'A' && strcmp(fieldName, "ACK") == 0) return base+2;
-    if (fieldName[0] == 'A' && strcmp(fieldName, "ADRACKReq") == 0) return base+3;
-    if (fieldName[0] == 'A' && strcmp(fieldName, "ADR") == 0) return base+4;
-    return basedesc ? basedesc->findField(fieldName) : -1;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    int baseIndex = base ? base->getFieldCount() : 0;
+    if (strcmp(fieldName, "FOptsLen") == 0) return baseIndex + 0;
+    if (strcmp(fieldName, "ClassB") == 0) return baseIndex + 1;
+    if (strcmp(fieldName, "ACK") == 0) return baseIndex + 2;
+    if (strcmp(fieldName, "ADRACKReq") == 0) return baseIndex + 3;
+    if (strcmp(fieldName, "ADR") == 0) return baseIndex + 4;
+    return base ? base->findField(fieldName) : -1;
 }
 
 const char *LoRaControlUplinkDescriptor::getFieldTypeString(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeString(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeString(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
         "bool",    // FIELD_FOptsLen
@@ -377,84 +321,84 @@ const char *LoRaControlUplinkDescriptor::getFieldTypeString(int field) const
 
 const char **LoRaControlUplinkDescriptor::getFieldPropertyNames(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldPropertyNames(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldPropertyNames(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-const char *LoRaControlUplinkDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *LoRaControlUplinkDescriptor::getFieldProperty(int field, const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldProperty(field, propertyname);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldProperty(field, propertyName);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-int LoRaControlUplinkDescriptor::getFieldArraySize(void *object, int field) const
+int LoRaControlUplinkDescriptor::getFieldArraySize(omnetpp::any_ptr object, int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldArraySize(object, field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldArraySize(object, field);
+        field -= base->getFieldCount();
     }
-    LoRaControlUplink *pp = (LoRaControlUplink *)object; (void)pp;
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
     switch (field) {
         case FIELD_FOptsLen: return 4;
         default: return 0;
     }
 }
 
-void LoRaControlUplinkDescriptor::setFieldArraySize(void *object, int field, int size) const
+void LoRaControlUplinkDescriptor::setFieldArraySize(omnetpp::any_ptr object, int field, int size) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldArraySize(object, field, size);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldArraySize(object, field, size);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaControlUplink *pp = (LoRaControlUplink *)object; (void)pp;
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set array size of field %d of class 'LoRaControlUplink'", field);
     }
 }
 
-const char *LoRaControlUplinkDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *LoRaControlUplinkDescriptor::getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldDynamicTypeString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldDynamicTypeString(object,field,i);
+        field -= base->getFieldCount();
     }
-    LoRaControlUplink *pp = (LoRaControlUplink *)object; (void)pp;
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string LoRaControlUplinkDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string LoRaControlUplinkDescriptor::getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldValueAsString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValueAsString(object,field,i);
+        field -= base->getFieldCount();
     }
-    LoRaControlUplink *pp = (LoRaControlUplink *)object; (void)pp;
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
     switch (field) {
         case FIELD_FOptsLen: if (i >= 4) return "";
                 return bool2string(pp->FOptsLen[i]);
@@ -466,17 +410,17 @@ std::string LoRaControlUplinkDescriptor::getFieldValueAsString(void *object, int
     }
 }
 
-void LoRaControlUplinkDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+void LoRaControlUplinkDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldValueAsString(object, field, i, value);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValueAsString(object, field, i, value);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaControlUplink *pp = (LoRaControlUplink *)object; (void)pp;
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
     switch (field) {
         case FIELD_FOptsLen: if (i < 0 || i >= 4) throw omnetpp::cRuntimeError("Array index %d out of bounds for field %d of class 'LoRaControlUplink'", i, field);
                 pp->FOptsLen[i] = string2bool(value); break;
@@ -488,44 +432,86 @@ void LoRaControlUplinkDescriptor::setFieldValueAsString(void *object, int field,
     }
 }
 
+omnetpp::cValue LoRaControlUplinkDescriptor::getFieldValue(omnetpp::any_ptr object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValue(object,field,i);
+        field -= base->getFieldCount();
+    }
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
+    switch (field) {
+        case FIELD_FOptsLen: if (i >= 4) return omnetpp::cValue();
+                return pp->FOptsLen[i];
+        case FIELD_ClassB: return pp->ClassB;
+        case FIELD_ACK: return pp->ACK;
+        case FIELD_ADRACKReq: return pp->ADRACKReq;
+        case FIELD_ADR: return pp->ADR;
+        default: throw omnetpp::cRuntimeError("Cannot return field %d of class 'LoRaControlUplink' as cValue -- field index out of range?", field);
+    }
+}
+
+void LoRaControlUplinkDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValue(object, field, i, value);
+            return;
+        }
+        field -= base->getFieldCount();
+    }
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
+    switch (field) {
+        case FIELD_FOptsLen: if (i < 0 || i >= 4) throw omnetpp::cRuntimeError("Array index %d out of bounds for field %d of class 'LoRaControlUplink'", i, field);
+                pp->FOptsLen[i] = value.boolValue(); break;
+        case FIELD_ClassB: pp->ClassB = value.boolValue(); break;
+        case FIELD_ACK: pp->ACK = value.boolValue(); break;
+        case FIELD_ADRACKReq: pp->ADRACKReq = value.boolValue(); break;
+        case FIELD_ADR: pp->ADR = value.boolValue(); break;
+        default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LoRaControlUplink'", field);
+    }
+}
+
 const char *LoRaControlUplinkDescriptor::getFieldStructName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructName(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     };
 }
 
-void *LoRaControlUplinkDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+omnetpp::any_ptr LoRaControlUplinkDescriptor::getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructValuePointer(object, field, i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructValuePointer(object, field, i);
+        field -= base->getFieldCount();
     }
-    LoRaControlUplink *pp = (LoRaControlUplink *)object; (void)pp;
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
     switch (field) {
-        default: return nullptr;
+        default: return omnetpp::any_ptr(nullptr);
     }
 }
 
-void LoRaControlUplinkDescriptor::setFieldStructValuePointer(void *object, int field, int i, void *ptr) const
+void LoRaControlUplinkDescriptor::setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldStructValuePointer(object, field, i, ptr);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldStructValuePointer(object, field, i, ptr);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaControlUplink *pp = (LoRaControlUplink *)object; (void)pp;
+    LoRaControlUplink *pp = omnetpp::fromAnyPtr<LoRaControlUplink>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LoRaControlUplink'", field);
     }
@@ -594,13 +580,13 @@ size_t LoRaAppUplinkFrame::getDeviceAddressArraySize() const
 
 uint8_t LoRaAppUplinkFrame::getDeviceAddress(size_t k) const
 {
-    if (k >= 4) throw omnetpp::cRuntimeError("Array of size 4 indexed by %lu", (unsigned long)k);
+    if (k >= 4) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)4, (unsigned long)k);
     return this->deviceAddress[k];
 }
 
 void LoRaAppUplinkFrame::setDeviceAddress(size_t k, uint8_t deviceAddress)
 {
-    if (k >= 4) throw omnetpp::cRuntimeError("Array of size 4 indexed by %lu", (unsigned long)k);
+    if (k >= 4) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)4, (unsigned long)k);
     this->deviceAddress[k] = deviceAddress;
 }
 
@@ -641,20 +627,20 @@ size_t LoRaAppUplinkFrame::getPayloadArraySize() const
 
 uint8_t LoRaAppUplinkFrame::getPayload(size_t k) const
 {
-    if (k >= 11) throw omnetpp::cRuntimeError("Array of size 11 indexed by %lu", (unsigned long)k);
+    if (k >= 11) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)11, (unsigned long)k);
     return this->payload[k];
 }
 
 void LoRaAppUplinkFrame::setPayload(size_t k, uint8_t payload)
 {
-    if (k >= 11) throw omnetpp::cRuntimeError("Array of size 11 indexed by %lu", (unsigned long)k);
+    if (k >= 11) throw omnetpp::cRuntimeError("Array of size %lu indexed by %lu", (unsigned long)11, (unsigned long)k);
     this->payload[k] = payload;
 }
 
 class LoRaAppUplinkFrameDescriptor : public omnetpp::cClassDescriptor
 {
   private:
-    mutable const char **propertynames;
+    mutable const char **propertyNames;
     enum FieldConstants {
         FIELD_deviceAddress,
         FIELD_control,
@@ -668,36 +654,38 @@ class LoRaAppUplinkFrameDescriptor : public omnetpp::cClassDescriptor
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
-    virtual const char *getProperty(const char *propertyname) const override;
+    virtual const char *getProperty(const char *propertyName) const override;
     virtual int getFieldCount() const override;
     virtual const char *getFieldName(int field) const override;
     virtual int findField(const char *fieldName) const override;
     virtual unsigned int getFieldTypeFlags(int field) const override;
     virtual const char *getFieldTypeString(int field) const override;
     virtual const char **getFieldPropertyNames(int field) const override;
-    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
-    virtual int getFieldArraySize(void *object, int field) const override;
-    virtual void setFieldArraySize(void *object, int field, int size) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyName) const override;
+    virtual int getFieldArraySize(omnetpp::any_ptr object, int field) const override;
+    virtual void setFieldArraySize(omnetpp::any_ptr object, int field, int size) const override;
 
-    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
-    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
-    virtual void setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+    virtual const char *getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const override;
+    virtual omnetpp::cValue getFieldValue(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const override;
 
     virtual const char *getFieldStructName(int field) const override;
-    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
-    virtual void setFieldStructValuePointer(void *object, int field, int i, void *ptr) const override;
+    virtual omnetpp::any_ptr getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const override;
+    virtual void setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const override;
 };
 
 Register_ClassDescriptor(LoRaAppUplinkFrameDescriptor)
 
 LoRaAppUplinkFrameDescriptor::LoRaAppUplinkFrameDescriptor() : omnetpp::cClassDescriptor(omnetpp::opp_typename(typeid(LoRaAppUplinkFrame)), "omnetpp::cPacket")
 {
-    propertynames = nullptr;
+    propertyNames = nullptr;
 }
 
 LoRaAppUplinkFrameDescriptor::~LoRaAppUplinkFrameDescriptor()
 {
-    delete[] propertynames;
+    delete[] propertyNames;
 }
 
 bool LoRaAppUplinkFrameDescriptor::doesSupport(omnetpp::cObject *obj) const
@@ -707,34 +695,34 @@ bool LoRaAppUplinkFrameDescriptor::doesSupport(omnetpp::cObject *obj) const
 
 const char **LoRaAppUplinkFrameDescriptor::getPropertyNames() const
 {
-    if (!propertynames) {
+    if (!propertyNames) {
         static const char *names[] = {  nullptr };
-        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
-        propertynames = mergeLists(basenames, names);
+        omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+        const char **baseNames = base ? base->getPropertyNames() : nullptr;
+        propertyNames = mergeLists(baseNames, names);
     }
-    return propertynames;
+    return propertyNames;
 }
 
-const char *LoRaAppUplinkFrameDescriptor::getProperty(const char *propertyname) const
+const char *LoRaAppUplinkFrameDescriptor::getProperty(const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? base->getProperty(propertyName) : nullptr;
 }
 
 int LoRaAppUplinkFrameDescriptor::getFieldCount() const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 5+basedesc->getFieldCount() : 5;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    return base ? 5+base->getFieldCount() : 5;
 }
 
 unsigned int LoRaAppUplinkFrameDescriptor::getFieldTypeFlags(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeFlags(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeFlags(field);
+        field -= base->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISARRAY | FD_ISEDITABLE,    // FIELD_deviceAddress
@@ -748,11 +736,11 @@ unsigned int LoRaAppUplinkFrameDescriptor::getFieldTypeFlags(int field) const
 
 const char *LoRaAppUplinkFrameDescriptor::getFieldName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldName(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldNames[] = {
         "deviceAddress",
@@ -766,23 +754,23 @@ const char *LoRaAppUplinkFrameDescriptor::getFieldName(int field) const
 
 int LoRaAppUplinkFrameDescriptor::findField(const char *fieldName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0] == 'd' && strcmp(fieldName, "deviceAddress") == 0) return base+0;
-    if (fieldName[0] == 'c' && strcmp(fieldName, "control") == 0) return base+1;
-    if (fieldName[0] == 'c' && strcmp(fieldName, "counter") == 0) return base+2;
-    if (fieldName[0] == 'p' && strcmp(fieldName, "port") == 0) return base+3;
-    if (fieldName[0] == 'p' && strcmp(fieldName, "payload") == 0) return base+4;
-    return basedesc ? basedesc->findField(fieldName) : -1;
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    int baseIndex = base ? base->getFieldCount() : 0;
+    if (strcmp(fieldName, "deviceAddress") == 0) return baseIndex + 0;
+    if (strcmp(fieldName, "control") == 0) return baseIndex + 1;
+    if (strcmp(fieldName, "counter") == 0) return baseIndex + 2;
+    if (strcmp(fieldName, "port") == 0) return baseIndex + 3;
+    if (strcmp(fieldName, "payload") == 0) return baseIndex + 4;
+    return base ? base->findField(fieldName) : -1;
 }
 
 const char *LoRaAppUplinkFrameDescriptor::getFieldTypeString(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldTypeString(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldTypeString(field);
+        field -= base->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
         "uint8_t",    // FIELD_deviceAddress
@@ -796,39 +784,39 @@ const char *LoRaAppUplinkFrameDescriptor::getFieldTypeString(int field) const
 
 const char **LoRaAppUplinkFrameDescriptor::getFieldPropertyNames(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldPropertyNames(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldPropertyNames(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-const char *LoRaAppUplinkFrameDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *LoRaAppUplinkFrameDescriptor::getFieldProperty(int field, const char *propertyName) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldProperty(field, propertyname);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldProperty(field, propertyName);
+        field -= base->getFieldCount();
     }
     switch (field) {
         default: return nullptr;
     }
 }
 
-int LoRaAppUplinkFrameDescriptor::getFieldArraySize(void *object, int field) const
+int LoRaAppUplinkFrameDescriptor::getFieldArraySize(omnetpp::any_ptr object, int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldArraySize(object, field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldArraySize(object, field);
+        field -= base->getFieldCount();
     }
-    LoRaAppUplinkFrame *pp = (LoRaAppUplinkFrame *)object; (void)pp;
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
     switch (field) {
         case FIELD_deviceAddress: return 4;
         case FIELD_payload: return 11;
@@ -836,48 +824,48 @@ int LoRaAppUplinkFrameDescriptor::getFieldArraySize(void *object, int field) con
     }
 }
 
-void LoRaAppUplinkFrameDescriptor::setFieldArraySize(void *object, int field, int size) const
+void LoRaAppUplinkFrameDescriptor::setFieldArraySize(omnetpp::any_ptr object, int field, int size) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldArraySize(object, field, size);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldArraySize(object, field, size);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaAppUplinkFrame *pp = (LoRaAppUplinkFrame *)object; (void)pp;
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set array size of field %d of class 'LoRaAppUplinkFrame'", field);
     }
 }
 
-const char *LoRaAppUplinkFrameDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *LoRaAppUplinkFrameDescriptor::getFieldDynamicTypeString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldDynamicTypeString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldDynamicTypeString(object,field,i);
+        field -= base->getFieldCount();
     }
-    LoRaAppUplinkFrame *pp = (LoRaAppUplinkFrame *)object; (void)pp;
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string LoRaAppUplinkFrameDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string LoRaAppUplinkFrameDescriptor::getFieldValueAsString(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldValueAsString(object,field,i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValueAsString(object,field,i);
+        field -= base->getFieldCount();
     }
-    LoRaAppUplinkFrame *pp = (LoRaAppUplinkFrame *)object; (void)pp;
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
     switch (field) {
         case FIELD_deviceAddress: return ulong2string(pp->getDeviceAddress(i));
-        case FIELD_control: {std::stringstream out; out << pp->getControl(); return out.str();}
+        case FIELD_control: return "";
         case FIELD_counter: return ulong2string(pp->getCounter());
         case FIELD_port: return ulong2string(pp->getPort());
         case FIELD_payload: return ulong2string(pp->getPayload(i));
@@ -885,17 +873,17 @@ std::string LoRaAppUplinkFrameDescriptor::getFieldValueAsString(void *object, in
     }
 }
 
-void LoRaAppUplinkFrameDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+void LoRaAppUplinkFrameDescriptor::setFieldValueAsString(omnetpp::any_ptr object, int field, int i, const char *value) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldValueAsString(object, field, i, value);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValueAsString(object, field, i, value);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaAppUplinkFrame *pp = (LoRaAppUplinkFrame *)object; (void)pp;
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
     switch (field) {
         case FIELD_deviceAddress: pp->setDeviceAddress(i,string2ulong(value)); break;
         case FIELD_counter: pp->setCounter(string2ulong(value)); break;
@@ -905,13 +893,52 @@ void LoRaAppUplinkFrameDescriptor::setFieldValueAsString(void *object, int field
     }
 }
 
+omnetpp::cValue LoRaAppUplinkFrameDescriptor::getFieldValue(omnetpp::any_ptr object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldValue(object,field,i);
+        field -= base->getFieldCount();
+    }
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
+    switch (field) {
+        case FIELD_deviceAddress: return (omnetpp::intval_t)(pp->getDeviceAddress(i));
+        case FIELD_control: return omnetpp::toAnyPtr(&pp->getControl()); break;
+        case FIELD_counter: return (omnetpp::intval_t)(pp->getCounter());
+        case FIELD_port: return (omnetpp::intval_t)(pp->getPort());
+        case FIELD_payload: return (omnetpp::intval_t)(pp->getPayload(i));
+        default: throw omnetpp::cRuntimeError("Cannot return field %d of class 'LoRaAppUplinkFrame' as cValue -- field index out of range?", field);
+    }
+}
+
+void LoRaAppUplinkFrameDescriptor::setFieldValue(omnetpp::any_ptr object, int field, int i, const omnetpp::cValue& value) const
+{
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldValue(object, field, i, value);
+            return;
+        }
+        field -= base->getFieldCount();
+    }
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
+    switch (field) {
+        case FIELD_deviceAddress: pp->setDeviceAddress(i,omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_counter: pp->setCounter(omnetpp::checked_int_cast<uint16_t>(value.intValue())); break;
+        case FIELD_port: pp->setPort(omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        case FIELD_payload: pp->setPayload(i,omnetpp::checked_int_cast<uint8_t>(value.intValue())); break;
+        default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LoRaAppUplinkFrame'", field);
+    }
+}
+
 const char *LoRaAppUplinkFrameDescriptor::getFieldStructName(int field) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructName(field);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructName(field);
+        field -= base->getFieldCount();
     }
     switch (field) {
         case FIELD_control: return omnetpp::opp_typename(typeid(LoRaControlUplink));
@@ -919,34 +946,38 @@ const char *LoRaAppUplinkFrameDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *LoRaAppUplinkFrameDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+omnetpp::any_ptr LoRaAppUplinkFrameDescriptor::getFieldStructValuePointer(omnetpp::any_ptr object, int field, int i) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount())
-            return basedesc->getFieldStructValuePointer(object, field, i);
-        field -= basedesc->getFieldCount();
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount())
+            return base->getFieldStructValuePointer(object, field, i);
+        field -= base->getFieldCount();
     }
-    LoRaAppUplinkFrame *pp = (LoRaAppUplinkFrame *)object; (void)pp;
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
     switch (field) {
-        case FIELD_control: return toVoidPtr(&pp->getControl()); break;
-        default: return nullptr;
+        case FIELD_control: return omnetpp::toAnyPtr(&pp->getControl()); break;
+        default: return omnetpp::any_ptr(nullptr);
     }
 }
 
-void LoRaAppUplinkFrameDescriptor::setFieldStructValuePointer(void *object, int field, int i, void *ptr) const
+void LoRaAppUplinkFrameDescriptor::setFieldStructValuePointer(omnetpp::any_ptr object, int field, int i, omnetpp::any_ptr ptr) const
 {
-    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    if (basedesc) {
-        if (field < basedesc->getFieldCount()) {
-            basedesc->setFieldStructValuePointer(object, field, i, ptr);
+    omnetpp::cClassDescriptor *base = getBaseClassDescriptor();
+    if (base) {
+        if (field < base->getFieldCount()){
+            base->setFieldStructValuePointer(object, field, i, ptr);
             return;
         }
-        field -= basedesc->getFieldCount();
+        field -= base->getFieldCount();
     }
-    LoRaAppUplinkFrame *pp = (LoRaAppUplinkFrame *)object; (void)pp;
+    LoRaAppUplinkFrame *pp = omnetpp::fromAnyPtr<LoRaAppUplinkFrame>(object); (void)pp;
     switch (field) {
         default: throw omnetpp::cRuntimeError("Cannot set field %d of class 'LoRaAppUplinkFrame'", field);
     }
 }
+
+namespace omnetpp {
+
+}  // namespace omnetpp
 
