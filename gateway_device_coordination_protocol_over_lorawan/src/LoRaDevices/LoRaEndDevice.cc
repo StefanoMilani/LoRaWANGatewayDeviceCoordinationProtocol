@@ -326,8 +326,8 @@ void LoRaEndDevice::initialize() {
     else {
         // Locate the end device randomly in a gateway radio range.
         // Set end device position
-        int bgX = parent->par("bgX").intValue();
-        int bgY = parent->par("bgY").intValue();
+        unsigned int bgX = parent->par("bgX").intValue();
+        unsigned int bgY = parent->par("bgY").intValue();
 
         bool fullCoverage = parent->par("fullCoverage").boolValue();
 
@@ -496,7 +496,7 @@ void LoRaEndDevice::initialize() {
     // Get LoRa regional parameters
     std::vector<float> bandwidths_;
     std::vector<std::tuple<uint8_t, float, float, uint8_t, uint8_t>> frequencies;
-    uint8_t transmissionPowerMax = 0;
+    // uint8_t transmissionPowerMax = 0;
     std::map<uint8_t, std::vector<uint8_t>> transmissionPowers;
 
     dutyCycleUsed          = 0;
@@ -965,10 +965,10 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
                 sendMessage(false);
             }
         }
-        else if (stage <= STAGE_FORWARD) {
+        else if (stage == STAGE_HELLO) {
             EV << "retransmissions: " << (int) retransmissions << "\n";
 
-            // Repeat HELLO/FORWARD msg with ACKs until the repetitions parameter is exhausted
+            // Repeat HELLO msg with ACKs until the repetitions parameter is exhausted
             // or there are still gateways to ACK or no response has been received
             //if (retransmissions || !gateways2ACK.empty() || statsMessages.empty()) {
             // Remove no response because if all levels are explored no response is received
@@ -1010,16 +1010,9 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
                 // Create and send the message
                 const char* name;
                 uint8_t port;
-                if (stage == STAGE_HELLO) {
-                    EV << "Sending HELLO message (possibly with ACK)...\n";
-                    name = "helloMsg";
-                    port = MSG_PORT_HELLO;
-                }
-                else {
-                    EV << "Sending FORWARD message (possibly with ACK)...\n";
-                    name = "forwardMsg";
-                    port = MSG_PORT_FORWARD;
-                }
+                EV << "Sending HELLO message (possibly with ACK)...\n";
+                name = "helloMsg";
+                port = MSG_PORT_HELLO;
 
                 // Only gateways in the radio range have the commonSKey and can verify and decrypt the message.
                 // To make the message available to out of range gateways,
@@ -1056,50 +1049,24 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
                     EV << "No gateway in the current level satisfies metrics requirements\n";
 
                     // Check if at least a STATS message has been received in the current level
-                    if (statsMessages.empty()) {
-                        EV << "No STATS message received in the current level, terminate exploration\n";
+                    // EV << "No STATS message received in the current level, terminate exploration\n";
 
-                        // Terminate and notify gateways to stop the simulation when all end devices have finished the protocol run
-                        cModule* parent = getParentModule();
-                        const int nGateways = parent->par("nGateways").intValue();
+                    // Terminate and notify gateways to stop the simulation when all end devices have finished the protocol run
+                    cModule* parent = getParentModule();
+                    const int nGateways = parent->par("nGateways").intValue();
 
-                        for (int i=0; i<nGateways; i++) {
-                            // Get the gateway in the vector at index i
-                            LoRaGateway* gateway = dynamic_cast<LoRaGateway*>(parent->getSubmodule("gateways", i));
-                            gateway->deviceFinish();
-                        }
-
-                        // Cancel the duty cycle timeout
-                        cancelAndDelete(eventTimeoutDutyCycle);
-                        eventTimeoutDutyCycle = nullptr;
-
-                        return;
+                    for (int i=0; i<nGateways; i++) {
+                        // Get the gateway in the vector at index i
+                        LoRaGateway* gateway = dynamic_cast<LoRaGateway*>(parent->getSubmodule("gateways", i));
+                        gateway->deviceFinish();
                     }
 
-                    // Go to next level and reset variables for handling STATS messages
-                    stage           = STAGE_FORWARD;
-                    retransmissions = RETRANSMISSIONS;
-                    levelNumber++;
-                    statsMessages.clear();
-                    gateways2ACK.clear();
-                    sortedGateways.clear();
+                    // Cancel the duty cycle timeout
+                    cancelAndDelete(eventTimeoutDutyCycle);
+                    eventTimeoutDutyCycle = nullptr;
 
-                    // Send forward msg
-                    EV << "Sending FORWARD message...\n";
+                    return;
 
-                    uint8_t payload[LORA_FRAME_SIZE_APP_PAYLOAD] = {
-                            requestId,
-                            levelNumber
-                    };
-
-                    msgOut = createMessageUplink(
-                            "forwardMsg", false,
-                            address, IPv4_ADDRESS_SIZE,
-                            ++fCntUp, MSG_PORT_FORWARD, payload, LORA_FRAME_SIZE_APP_PAYLOAD,
-                            commonSKey,
-                            spreadingFactor, transmissionPower,
-                            bandwidth, channelFrequency);
-                    sendMessage(true);
                 }
                 else {
                     auto listSelectedGateways = it->second;
@@ -1181,112 +1148,29 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
                 }
             }
             else {
-                // Go to forward stage and reset variables for handling STATS messages
-                stage           = STAGE_FORWARD;
-                retransmissions = RETRANSMISSIONS;
-                levelNumber++;
-                statsMessages.clear();
-                gateways2ACK.clear();
-                sortedGateways.clear();
+                EV << "No gateway in the current level satisfies metrics requirements\n";
 
-                // Send forward msg
-                EV << "Sending FORWARD message...\n";
+                // Check if at least a STATS message has been received in the current level
+                // EV << "No STATS message received in the current level, terminate exploration\n";
 
-                uint8_t payload[LORA_FRAME_SIZE_APP_PAYLOAD] = {
-                        requestId,
-                        levelNumber
-                };
+                // Terminate and notify gateways to stop the simulation when all end devices have finished the protocol run
+                cModule* parent = getParentModule();
+                const int nGateways = parent->par("nGateways").intValue();
 
-                msgOut = createMessageUplink(
-                        "forwardMsg", false,
-                        address, IPv4_ADDRESS_SIZE,
-                        ++fCntUp, MSG_PORT_FORWARD, payload, LORA_FRAME_SIZE_APP_PAYLOAD,
-                        commonSKey,
-                        spreadingFactor, transmissionPower,
-                        bandwidth, channelFrequency);
-                sendMessage(true);
+                for (int i=0; i<nGateways; i++) {
+                    // Get the gateway in the vector at index i
+                    LoRaGateway* gateway = dynamic_cast<LoRaGateway*>(parent->getSubmodule("gateways", i));
+                    gateway->deviceFinish();
+                }
+
+                // Cancel the duty cycle timeout
+                cancelAndDelete(eventTimeoutDutyCycle);
+                eventTimeoutDutyCycle = nullptr;
+
+                return;
             }
         }
 
-        /*else if (stage == STAGE_PAIRING) {
-            // Check if the network server has sent a verification for the PAIRING message in the last receive window
-            if (messageReceived == MSG_PAIRING_VERIFY) {
-                // Yes, build payload to acknowledge the network server
-                const char* name;
-                uint8_t payload[LORA_FRAME_SIZE_APP_PAYLOAD] = { requestId };
-
-                if (isPairingVerified) {
-                    payload[1] = ACK;
-                    name = "pairingVerifyACKMsg";
-                    EV << "Sending ACK message to network server for pairing verification...\n";
-                }
-                else {
-                    payload[1] = NACK;
-                    name = "pairingVerifyNACKMsg";
-                    EV << "Sending NACK message to network server for pairing verification...\n";
-                }
-
-                // Send ACK or NACK msg to network server
-                msgOut = createMessageUplink(name, true,
-                        address, IPv4_ADDRESS_SIZE, ++fCntUp, MSG_PORT_PAIRING_VERIFIED, payload, LORA_FRAME_SIZE_APP_PAYLOAD);
-                sendBroadcast(this, msgOut, LORA_GATE_OUT);
-            }
-            // Check if the selected gateway has sent the PAIRING_ACCEPT message
-            // in response to the PAIRING_REQUEST in a previous receive window
-            else if (!isPairingAccepted) {
-                // No because isPairingAccepted variable can be either true and the pairing is accepted or
-                // false but the state is downgraded to FORWARD_STAGE.
-                // So, here false means the PAIRING_REQUEST message is not received,
-                // repeat the sending
-                EV << "Resending PAIRING_REQUEST message...\n";
-                sendBroadcast(this, msgOut->dup(), LORA_GATE_OUT);
-            }
-            // Else check if no frame has been received in the last receive window and
-            // the pairing has been verified (to await the verification)
-            else if (!messageReceived && isPairingVerified) {
-                // Association completed and verified.
-                // Negotiate symmetric key
-
-                stage = STAGE_GENERATE_ASSOCIATION_KEY;
-
-                // Send joinEUI, devEUI, nonce (in OTAA)
-
-                // Generate two nonces for deriving a symmetric key
-                // to share with gateways in the radio range
-                unsigned nonce1 = generateNonce(0xFFFFFF);
-                unsigned nonce2 = generateNonce(0xFFFF);
-
-                // Convert nonces to array of bytes
-                uint8_t nonce1_[4];
-                uintToBytes(nonce1, nonce1_);
-                uint8_t nonce2_[4];
-                uintToBytes(nonce2, nonce2_);
-
-                // Build payload
-                uint8_t payload[LORA_FRAME_SIZE_APP_PAYLOAD] = {
-                    nonce1_[0],
-                    nonce1_[1],
-                    nonce1_[2],
-                    nonce1_[3],
-                    nonce2_[0],
-                    nonce2_[1],
-                    nonce2_[2],
-                    nonce2_[3],
-                    networkId[0],
-                    networkId[1],
-                    networkId[2]
-                };
-
-                // Derive session key exclusively shared with the associated gateway
-                strncpy(associationSKey, generateKey(associationKey, nonce1, nonce2, networkId), sizeof(associationSKey));
-
-                // Send message
-                EV << "Sending GENERATE_ASSOCIATION_KEY message...\n";
-                msgOut = createMessageUplink("generateAssociationKeyMsg", true,
-                        address, IPv4_ADDRESS_SIZE, ++fCntUp, MSG_PORT_GENERATE_ASSOCIATION_KEY, payload, LORA_FRAME_SIZE_APP_PAYLOAD);
-                sendBroadcast(this, msgOut->dup(), LORA_GATE_OUT);
-            }
-        }*/
         else if (stage == STAGE_PAIRING) {
             if (!messageReceived) {
                 // The PAIRING_REQUEST response has not been received,
@@ -1345,43 +1229,6 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
                 delete msgOut;
 
                 // Send joinEUI, devEUI, nonce (in OTAA)
-
-                //=======================================================
-                // Generate two nonces for deriving a symmetric key
-                // to share with the selected gateway
-                /*unsigned nonce1 = generateNonce(0xFFFFFF);
-                unsigned nonce2 = generateNonce(0xFFFF);
-
-                // Convert nonces to array of bytes
-                uint8_t nonce1_[4];
-                uintToBytes(nonce1, nonce1_);
-                uint8_t nonce2_[4];
-                uintToBytes(nonce2, nonce2_);
-
-                // Build payload
-                uint8_t payload[LORA_FRAME_SIZE_APP_PAYLOAD] = {
-                    nonce1_[0],
-                    nonce1_[1],
-                    nonce1_[2],
-                    nonce1_[3],
-                    nonce2_[0],
-                    nonce2_[1],
-                    nonce2_[2],
-                    nonce2_[3],
-                    networkId[0],
-                    networkId[1],
-                    networkId[2]
-                };
-
-                // Derive session key exclusively shared with the associated gateway
-                strncpy(associationSKey, generateKey(associationKey, nonce1, nonce2, networkId), sizeof(associationSKey));*/
-                //=======================================================
-
-                //=======================================================
-                // As messages are encrypted with the session key shared between the end device
-                // and the gateways in the radio range and forwarded messages to level-2 or greater gateways
-                // are still encrypted with gateways keys,
-                // here we can reuse the OTAA mechanism
 
                 // Generate a nonce for deriving a symmetric key
                 nonceDev = generateNonce(0xFFFF);
@@ -1465,7 +1312,7 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
             EV << "locationString in payload: " << &payload[1] <<"\n";
 
             // From here small overhead because the gateways just forward frames as they are and does not need
-            // to decrypt and reencrypt to recalculate the MIC (FORWARD)
+            // to decrypt and reencrypt to recalculate the MIC
 
             // Send data profile
             msgOut = createMessageUplink(
@@ -1562,7 +1409,7 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
 
         // Change transmit periodicity to prevent synchronization of end device transmissions
         // when downlinks are not expected to be retransmitted
-        if (stage == STAGE_HELLO || stage == STAGE_FORWARD)
+        if (stage == STAGE_HELLO)
             scheduleAt(msgOutArrivalTime + TX_DELAY, eventTimeoutTX);
         else {
             std::random_device rd {};
@@ -1607,31 +1454,6 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
             return;
         }
 
-        //======================
-        // Replaced with background noise and interferences
-
-        // Lose the message with a certain probability
-        //if (uniform(0, 1) < 2) {
-        //if (uniform(0, 1) < MSG_LOSS_PROBABILITY) {
-        /*if (((rand() + (int) uniform(0,100)) % 101) < MSG_LOSS_PROBABILITY) {
-            EV << "Message lost!\n";
-
-            // Make animation more informative
-            bubble("Message lost!");
-
-            // Delete the message as in OMNeT++ once sent out,
-            // a message no longer belongs to the sender module and
-            // it is taken over by the simulation kernel, and will eventually be delivered to the destination module.
-            // Once the message arrives in the destination module, that module will have full authority over it
-            delete msgIn;
-
-            // Send signal for statistic collection
-            emit(signalLost, 1u);
-            emit(signalLostCount, ++messagesLost);
-
-            return;
-        }*/
-        //======================
 
         if (!surviveMessageToLoRaInterference(msgIn))
             return;
@@ -1786,8 +1608,8 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
         // Only a message can be received in a receive window
         messageReceived = true;
 
-        // Check if the message is received during STAGE_HELLO or STAGE_FORWARD
-        if (stage <= STAGE_FORWARD) {
+        // Check if the message is received during STAGE_HELLO
+        if (stage == STAGE_HELLO) {
             // Only a message can be received in a receive window
             //messageReceived = MSG_STATS;
 
@@ -1829,55 +1651,12 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
             gateways2ACK.push_back(gatewayAddress);
 
             // Insert the gateway IP address in the map indexed by the score
-            // using the expected arrival time of last HELLO/FORWARD message
+            // using the expected arrival time of last HELLO message
             //insertGatewayInDecisionMap(score, gatewayAddress, timestampBytes);
             //insertGatewayInDecisionMap(score, gatewayAddress, timestamp);
             insertGatewayInDecisionMap(score, gatewayAddress, msgOutArrivalTime);
         }
 
-        /*else if (stage == STAGE_PAIRING) {
-            // Check if the incoming message is a response from the selected gateway
-            if (port == MSG_PORT_PAIRING_ACCEPT) {
-                // Only a message can be received in a receive window
-                messageReceived = MSG_PAIRING_ACCEPT;
-
-                EV << "Received PAIRING_ACCEPT message";
-
-                // Check if the pairing request has been accepted by the selected gateway
-                isPairingAccepted = isPairingRequestAccepted(msgIn);
-                if (!isPairingAccepted) {
-                    // Two solutions because the network server verification should arrive after the gateway ACK:
-                    // - Await the verification of the network server before start sending data
-                    //   to ignore subsequent messages received during sending (this can be also avoided
-                    //   checking the isPairingVerified variable that should). The real advantage is to avoid managing
-                    //   the LoRaWAN limitation where the ACK/NACK is sent and the data must be queued and sent
-                    //   in the next transmission but the end device can be blocked in non starting sending data
-                    //   if the message from the network server never arrives
-                    // - Start sending but manage the request of the server verification during the sending
-                    //   by queuing data and then sending a pair in the next transmission. Manage also ignore
-                    //   possible other requests.
-
-                    EV << " with NACK";
-
-                    // Search another gateway
-                    stage = STAGE_FORWARD;
-                    searchNewGateway = true;
-                    isPairingVerified = false;
-                }
-
-                EV << "\n";
-            }
-            else {
-                // Only a message can be received in a receive window
-                messageReceived = MSG_PAIRING_VERIFY;
-
-                EV << "Received PAIRING_VERIFY message\n";
-
-                // The message comes from the network server (only if the pairing message has been accepted by the gateway)
-                // Check incoming message from network server
-                isPairingVerified = verifyPairing(msgIn);
-            }
-        }*/
         else if (stage == STAGE_PAIRING) {
             // Only a message can be received in a receive window
             //messageReceived = MSG_PAIRING_ACCEPT;
@@ -1889,7 +1668,7 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
                 EV << "Received NACK for PAIRING_REQUEST message\n";
 
                 // Search another gateway
-                stage = STAGE_FORWARD;
+                stage = STAGE_HELLO;
                 searchNewGateway = true;
                 //isPairingVerified = false;
             }
@@ -1922,7 +1701,7 @@ void LoRaEndDevice::handleMessage(cMessage *msgIn) {
                 insertGatewayInDecisionMap(score, selectedGatewayAddress, msgOutArrivalTime);
 
                 // Search another gateway
-                stage = STAGE_FORWARD;
+                stage = STAGE_HELLO;
                 searchNewGateway = true;
                 //isPairingVerified = false;
 
@@ -1987,7 +1766,6 @@ void LoRaEndDevice::refreshDisplay() const {
 bool LoRaEndDevice::isValidPort(uint8_t port) {
     return (stage == STAGE_GENERATE_COMMON_KEY && port == MSG_PORT_GENERATE_COMMON_KEY)                     ||
            (stage == STAGE_HELLO && port == MSG_PORT_STATS)                                                 ||
-           (stage == STAGE_FORWARD && port == MSG_PORT_STATS)                                               ||
            //(stage == STAGE_PAIRING && (port == MSG_PORT_PAIRING_ACCEPT || port == MSG_PORT_PAIRING_VERIFY)) ||
            (stage == STAGE_PAIRING && port == MSG_PORT_PAIRING_ACCEPT)                                      ||
            (stage == STAGE_CONNECTION && port == MSG_PORT_CONNECTION)                                       ||
@@ -2038,19 +1816,6 @@ uint8_t LoRaEndDevice::isValidLoRaFrame(cMessage* msg, uint8_t* frameType, uint8
     // Get the device address
     uint8_t deviceAddress[IPv4_ADDRESS_SIZE];
     getArrayInMessageDownlink(gatewayAppMsg, &LoRaAppDownlinkFrame::getDeviceAddress, deviceAddress, IPv4_ADDRESS_SIZE);
-
-    /*EV << "End device IP address: "
-        << (int) address[0] << "."
-        << (int) address[1] << "."
-        << (int) address[2] << "."
-        << (int) address[3]
-        << "\n";
-    EV << "Received end device IP address: "
-        << (int) deviceAddress[0] << "."
-        << (int) deviceAddress[1] << "."
-        << (int) deviceAddress[2] << "."
-        << (int) deviceAddress[3]
-        << "\n";*/
 
     // Check if the frame is intended for the current end device address
     if (memcmp(address, deviceAddress, IPv4_ADDRESS_SIZE))

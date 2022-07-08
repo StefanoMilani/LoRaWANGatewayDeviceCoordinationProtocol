@@ -211,8 +211,8 @@ void LoRaGateway::initialize() {
 
     // Set gateway position
     cModule* parent = getParentModule();
-    int bgX = parent->par("bgX").intValue();
-    int bgY = parent->par("bgY").intValue();
+    unsigned int bgX = parent->par("bgX").intValue();
+    unsigned int bgY = parent->par("bgY").intValue();
     bool realDeployment = parent->par("realDeployment").boolValue();
 
     //========================
@@ -347,7 +347,7 @@ void LoRaGateway::initialize() {
             }
             else {
                 // Get a random gateway among the previous in the vector
-                int i = (rand() + (int) uniform(0, 100)) % index;
+                i = (rand() + (int) uniform(0, 100)) % index;
             }
 
             // Get the gateway
@@ -730,7 +730,7 @@ void LoRaGateway::handleMessage(cMessage *msgIn) {
         EV << "Sending NEARBY_GATEWAYS messages...\n";
         sendMessageNearbyGateway();
 
-        int neighborSize = neighborGatewayAddresses.size();
+        unsigned int neighborSize = neighborGatewayAddresses.size();
 
         // Send signal for statistic collection
         emit(signalSent, neighborSize);
@@ -1100,32 +1100,13 @@ void LoRaGateway::refreshDisplay() const {
     getDisplayString().setTagArg("t", 0, buf);
 }
 
-
-
 //bool LoRaGateway::isValidPort(unsigned port, bool isUplinkFrame) {
 bool LoRaGateway::isValidPort(unsigned port, uint8_t msgType) {
     switch (msgType) {
-        /*case MSG_LORA:
-            return port == MSG_PORT_MAC_CMD                  ||
-                   port == MSG_PORT_HELLO_GATEWAY            ||
-                   port == MSG_PORT_GENERATE_COMMON_KEY      ||
-                   port == MSG_PORT_HELLO                    ||
-                   port == MSG_PORT_FORWARD                  ||
-                   port == MSG_PORT_STATS                    ||
-                   port == MSG_PORT_PAIRING_REQUEST          ||
-                   port == MSG_PORT_PAIRING_ACCEPT           ||
-                   //port == MSG_PORT_PAIRING_VERIFY           ||
-                   //port == MSG_PORT_PAIRING_VERIFIED         ||
-                   port == MSG_PORT_CONNECTION               ||
-                   port == MSG_PORT_GENERATE_ASSOCIATION_KEY ||
-                   port == MSG_PORT_DATA_PROFILE             ||
-                   port == MSG_PORT_DATA;
-            break;*/
         case MSG_LORA_UPLINK:
             return port == MSG_PORT_MAC_CMD                  ||
                    port == MSG_PORT_GENERATE_COMMON_KEY      ||
                    port == MSG_PORT_HELLO                    ||
-                   port == MSG_PORT_FORWARD                  ||
                    port == MSG_PORT_PAIRING_REQUEST          ||
                    //port == MSG_PORT_PAIRING_VERIFIED         ||
                    port == MSG_PORT_CONNECTION               ||
@@ -1152,11 +1133,6 @@ bool LoRaGateway::isValidPort(unsigned port, uint8_t msgType) {
                    port == MSG_PORT_PROCESSED_DATA;
             break;
         case MSG_UDP:
-            // Open just a port
-            /*return port == MSG_PORT_FORWARD_JOIN            ||
-                   port == MSG_PORT_FORWARD_MAC_CMD         ||
-                   port == MSG_PORT_FORWARD_PAIRING_REQUEST ||
-                   port == MSG_PORT_FORWARD_CONNECTION;*/
             return port == MSG_PORT_FORWARD_OVER_IP;
             break;
         default:
@@ -2140,7 +2116,6 @@ void LoRaGateway::processMessageFromLoRaLayer(
         return;
     }
 
-
     // Check if the message is received via LoRa
     if (srcAddress == std::array<uint8_t, IPv4_ADDRESS_SIZE> {0,0,0,0}) {
         //EV << "Received LoRa msg!\n";
@@ -2244,7 +2219,6 @@ void LoRaGateway::processMessageFromLoRaLayer(
 
     if (frameType == JOIN_REQUEST) {
         EV << "Forwarding JOIN_REQUEST message over IP...\n";
-        //forwardMessageIp(msgIn, "forwardJoinRequestMsg", networkServerAddress, MSG_PORT_FORWARD_JOIN);
         forwardMessageIp(msgIn, "forwardJoinRequestMsg", networkServerAddress, MSG_PORT_FORWARD_OVER_IP, false);
 
         // Send signal for statistic collection
@@ -2330,7 +2304,7 @@ void LoRaGateway::processMessageFromLoRaLayer(
 
 
     //*************************************
-    // TODO: Merge STATS response to HELLO and FORWARD message
+    // TODO: Merge STATS response to HELLO
     //*************************************
 
 
@@ -2687,54 +2661,9 @@ void LoRaGateway::processMessageFromLoRaLayer(
         // Add entry in the inverted index
         eventTimeoutRetransmissions[eventTimeout] = endDeviceAddress;
 
-
-        //===================
-        // Calculate response airtime to calculate the delay of the response
-        /*EV << "Calculate Time On Air\n";
-
-        // Calculate preamble and frame airtime
-        auto tuple = calculateTimeOnAir(msgOut);
-
-        // Convert frame time on air from ms to s
-        double airtimeFrame = std::get<1>(tuple) / 1000;
-
-        // Check if computation succeeded
-        if (airtimeFrame < 0)
-            return;*/
-
-        // Calculate arrival time
-        /*simtime_t simtime = simTime();
-        simtime_t arrivalFrame = simtime + airtimeFrame;
-
-        EV << "Simulation time: " << simtime << "\n";
-        EV << "Expected arrival frame time: " << arrivalFrame << "\n";*/
-
-        /*EV << "Sending STATS message...\n";
-
-        // Calculate the delay (with tolerance) to send the message in the receive window of the end device
-        double delay = RX_DELAY_1 - airtimeFrame + 0.1;
-        if (delay > 0)
-            sendDelayedBroadcastSecurely(this, eventTimeoutChannelTransmissions, msgOut->dup(), delay, LORA_GATE_OUT);
-        else
-            sendBroadcastSecurely(this, eventTimeoutChannelTransmissions, msgOut->dup(), LORA_GATE_OUT);
-
-        // For a retransmission attempt, await this roughly identical moment in the future (TX_DELAY) and apply the delay
-        scheduleAt(simTime() + TX_DELAY + delay, eventTimeout);*/
-        //===================
-
         //===================
         EV << "Sending STATS message...\n";
         sendMessageLoRa(msgOut->dup(), true, true, -1, true, eventTimeout);
-        //===================
-
-        //===================
-        /*EV << "Sending STATS message...\n";
-        // Send the message in the receive window of the end device
-        //sendDelayedBroadcast(this, msgOut, RX_DELAY_1 + 0.1, LORA_GATE_OUT);
-        //sendDelayedBroadcastSecurely(this, eventTimeoutChannelTransmissions, msgOut, RX_DELAY_1 + 0.1, LORA_GATE_OUT);
-        sendDelayedBroadcastSecurely(this, eventTimeoutChannelTransmissions, msgOut->dup(), RX_DELAY_1 + 0.1, LORA_GATE_OUT);
-        scheduleAt(simTime() + timeoutLoRa, eventTimeout);*/
-        //===================
 
         // Propagate the downlink counter to the network server to enable it to send MAC commands
         // (shared downlink counter but also uplink counter as it is the same in this moment)
@@ -2760,364 +2689,10 @@ void LoRaGateway::processMessageFromLoRaLayer(
 
         delete msgIn;
     }
-    else if (port == MSG_PORT_FORWARD) {
-        EV << "Received FORWARD message\n";
-
-        EV << "Decrypting FORWARD message...\n";
-
-        // Remember the key used for decryption
-        std::array<uint8_t, KEY_LORAWAN_SIZE> decryptKey;
-        decryptUplink(payloadIn, payloadIn, decryptKey.data(), endDeviceAddress, srcAddress);
-
-        // Get message requestId & sequence number
-        uint8_t requestId   = payloadIn[0];
-        uint8_t levelNumber = payloadIn[1];
-
-        // Check if a HELLO/FORWARD message from the end device address has already been received
-        if (it != map.end()) {
-            // The end device is in the map, get the entry
-            tuple = it->second;
-
-            // Check if the request ID in the message matches the ID stored in the map
-            if (requestId == std::get<2>(tuple)) {
-                // Get the associated timer to the previously STATS sent
-                cMessage* timer = std::get<1>(tuple);
-
-                // Check if a STATS message has been sent in the current round and
-                // the gateway is awaiting the ACK
-                if (levelNumber == std::get<3>(tuple)) {
-                    // Check if the ACK for the STATS message is already arrived
-                    if (timer == nullptr) {
-                        EV << "ACK already received for STATS message, ignore the message\n";
-                        delete msgIn;
-                        return;
-                    }
-
-                    // Iterate message list for ACKs
-                    for (int i=2; i<11-IPv4_ADDRESS_SIZE; i+=IPv4_ADDRESS_SIZE) {
-                        uint8_t gatewayIpAddress[IPv4_ADDRESS_SIZE] = {};
-                        memcpy(gatewayIpAddress, &payloadIn[i], IPv4_ADDRESS_SIZE);
-
-                        // Check if the IP address acknowledged matches the gateway one
-                        if (!memcmp(address, gatewayIpAddress, IPv4_ADDRESS_SIZE)) {
-                            // ACK received, cancel timeout event and remove the pointer from the tuple
-                            EV << "ACK received for STATS message, canceling timer for resending the frame...\n";
-                            eventTimeoutRetransmissions.erase(timer);
-
-                            delete std::get<0>(tuple);
-                            cancelAndDelete(timer);
-
-                            std::get<0>(tuple) = nullptr;
-                            std::get<1>(tuple) = nullptr;
-                            map[endDeviceAddress] = tuple;
-
-                            storageOccupied -= sizeof(cMessage*) + IPv4_ADDRESS_SIZE;
-
-                            delete msgIn;
-                            return;
-                        }
-                    }
-
-                    // The gateway has sent a STATS but no ACK has been received.
-                    // Delete the timeout to create a new one
-                    eventTimeoutRetransmissions.erase(timer);
-
-                    delete std::get<0>(tuple);
-                    cancelAndDelete(timer);
-
-                    // Decrease occupied storage
-                    storageOccupied -= sizeof(cMessage*) + IPv4_ADDRESS_SIZE;
-                    storageOccupied -= IPv4_ADDRESS_SIZE + sizeof(tuple);
-
-                    // Reuse code: instead of updating existing message, create new
-                }
-                // Else check if the message has to be forwarded to neighbors (i.e. next level)
-                else if (levelNumber > std::get<3>(tuple)) {
-                    // The level number is greater than the stored one,
-                    // update the entry in the table to level - 1
-                    // to avoid forwarding old frames and to continue forwarding in the current round
-                    std::get<3>(tuple) = levelNumber - 1;
-                    map[endDeviceAddress] = tuple;
-
-                    // Check if the ACK for the STATS message is arrived in the previous level
-                    if (timer != nullptr) {
-                        // No, but the message is lost forever as the end device is accessing the next level.
-                        // Cancel timeout event and remove the pointer from the tuple
-                        EV << "No ACK received for STATS message but FORWARD,\ncanceling timer for resending the frame...\n";
-                        eventTimeoutRetransmissions.erase(timer);
-
-                        delete std::get<0>(tuple);
-                        cancelAndDelete(timer);
-
-                        std::get<0>(tuple) = nullptr;
-                        std::get<1>(tuple) = nullptr;
-                        map[endDeviceAddress] = tuple;
-
-                        storageOccupied -= sizeof(cMessage*) + IPv4_ADDRESS_SIZE;
-                    }
-
-                    EV << "Forwarding FORWARD message to neighbors...\n";
-
-                    //==========================================
-                    // Forward the message to nearby gateways over LoRa
-                    // and do not schedule retransmission because the end device handles it
-                    /*sendBroadcast(this, msgIn, LORA_GATE_OUT);
-
-                    // Send signal for statistic collection
-                    emit(signalSent, 1u);
-                    emit(signalSentLoRa, 1u);
-
-                    networkOut += LORA_FRAME_SIZE_DATALINK_HEADER + LORA_FRAME_SIZE_APP_HEADER + LORA_FRAME_SIZE_APP_PAYLOAD;*/
-                    //==========================================
-
-                    //==========================================
-                    // Forward the message to nearby gateways over IP
-                    forwardMessageToNeighbors(msgIn, decryptKey.data());
-
-                    int neighborsSize = neighborGatewayAddresses.size();
-
-                    // Send signal for statistic collection
-                    emit(signalSent, neighborsSize);
-                    emit(signalSentIp, neighborsSize);
-
-                    messagesSentCount   += neighborsSize;
-                    messagesSentIpCount += neighborsSize;
-                    emit(signalSentCount, messagesSentCount);
-                    emit(signalSentIpCount, messagesSentIpCount);
-
-                    networkOut += (LORA_FRAME_SIZE_DATALINK_HEADER + LORA_FRAME_SIZE_DATALINK_MIC +
-                                   LORA_FRAME_SIZE_APP_HEADER + LORA_FRAME_SIZE_APP_PAYLOAD) * neighborsSize;
-                    networkOut += (MESSAGE_SIZE_IPV4_HEADER + MESSAGE_SIZE_UDP_HEADER) * neighborsSize;
-                    //==========================================
-
-                    return;
-                }
-                else {
-                    // Ignore invalid level numbers
-                    delete msgIn;
-                    return;
-                }
-            }
-        }
-
-        // The end device is not in the map or
-        // there is an old value of the request ID (i.e. new algorithm run) or
-        // no ACK has been received for the previous STATS message.
-        // Build payload
-        uint8_t payload[LORA_FRAME_SIZE_APP_PAYLOAD] = {
-            requestId,
-            getCpuLoad(),
-            getGpuLoad(),
-            getRamLoad(),
-            getStorageLoad(),
-            getNetworkIn(),
-            getNetworkOut(),
-            address[0],
-            address[1],
-            address[2],
-            address[3]
-        };
-
-        // Create the STATS message and the corresponding timeout
-        cPacket* msgOut = createMessageDownlink(
-                "statsMsg", true,
-                endDeviceAddress.data(), IPv4_ADDRESS_SIZE, std::get<5>(tuple), MSG_PORT_STATS,
-                payload, LORA_FRAME_SIZE_APP_PAYLOAD,
-                //commonEndDeviceKey,
-                // Reuse the same cluster session key used to decrypt incoming message
-                decryptKey.data(),
-                spreadingFactor, transmissionPower, bandwidth, channelFrequency);
-        cMessage* eventTimeout = new cMessage("timeoutGW");
-
-        // Store the entry in the table (include the timeout reference to stop retransmissions)
-        std::get<0>(tuple) = msgOut;
-        std::get<1>(tuple) = eventTimeout;
-        std::get<2>(tuple) = requestId;
-        std::get<3>(tuple) = levelNumber;
-        std::get<8>(tuple) = srcAddress;
-        map[endDeviceAddress] = tuple;
-
-        // Add entry in the inverted index
-        eventTimeoutRetransmissions[eventTimeout] = endDeviceAddress;
-
-
-        //EV << "Sending STATS message...\n";
-
-        //====================
-        // Send the message in the receive window of the end device
-        //sendDelayedBroadcast(this, msgOut, RX_DELAY_1 + 0.1, LORA_GATE_OUT);
-        //====================
-
-        //====================
-        // Send the message in the receive window of the end device through the sender (peer)
-        //forwardMessageIp(msgOut, "statsMsg",
-                //selectedGatewayAddress, MSG_PORT_FORWARD);
-        //        srcAddress, MSG_PORT_FORWARD_OVER_IP, true, RX_DELAY_1 + 0.1);
-        //====================
-
-        //scheduleAt(simTime() + timeoutLoRa, eventTimeout);
-
-
-        //===================
-        // Calculate response airtime to calculate the delay of the response
-        EV << "Calculate Time On Air\n";
-
-        // Calculate preamble and frame airtime
-        auto tuple = calculateTimeOnAir(msgOut);
-
-        // Convert frame time on air from ms to s
-        double airtimeFrame = std::get<1>(tuple) / 1000;
-
-        // Check if computation succeeded
-        if (airtimeFrame < 0)
-            return;
-
-        // Calculate arrival time
-        /*simtime_t simtime = simTime();
-        simtime_t arrivalFrame = simtime + airtimeFrame;
-
-        EV << "Simulation time: " << simtime << "\n";
-        EV << "Expected arrival frame time: " << arrivalFrame << "\n";*/
-
-        EV << "Sending STATS message...\n";
-
-        // Calculate the delay (with tolerance) to send the message in the receive window of the end device
-        double delay = RX_DELAY_1 - airtimeFrame + 0.1;
-
-        // Send the message in the receive window of the end device through the sender (peer)
-        if (delay > 0)
-            forwardMessageIp(msgOut->dup(), "statsMsg",
-                //selectedGatewayAddress, MSG_PORT_FORWARD);
-                srcAddress, MSG_PORT_FORWARD_OVER_IP, true, delay);
-        else
-            forwardMessageIp(msgOut->dup(), "statsMsg",
-                //selectedGatewayAddress, MSG_PORT_FORWARD);
-                srcAddress, MSG_PORT_FORWARD_OVER_IP, true);
-
-        // For a retransmission attempt, await this roughly identical moment in the future (TX_DELAY + airtimeFrame) and
-        // apply the delay
-        scheduleAt(simTime() + TX_DELAY + airtimeFrame + delay, eventTimeout);
-        //===================
-
-
-        // Propagate the downlink counter to the network server to enable it to send MAC commands
-        // (shared downlink counter but also uplink counter as it is the same in this moment)
-        EV << "Propagating downlink counter from gateway to network server...\n";
-        sendMessageShareCounter(endDeviceAddress.data(), counter);
-
-        // Send signal for statistic collection
-        emit(signalSent, 2u);
-        emit(signalSentIp, 2u);
-
-        messagesSentCount   += 2;
-        messagesSentIpCount += 2;
-        emit(signalSentCount, messagesSentCount);
-        emit(signalSentIpCount, messagesSentIpCount);
-
-        storageOccupied += IPv4_ADDRESS_SIZE + sizeof(tuple);
-        storageOccupied += sizeof(cMessage*) + IPv4_ADDRESS_SIZE;
-        networkOut += LORA_FRAME_SIZE_DATALINK_HEADER + LORA_FRAME_SIZE_DATALINK_MIC +
-                      LORA_FRAME_SIZE_APP_HEADER + LORA_FRAME_SIZE_APP_PAYLOAD;
-        networkOut += (MESSAGE_SIZE_IPV4_HEADER + MESSAGE_SIZE_TCP_HEADER) * 2;
-
-        delete msgIn;
-    }
-    else if (port == MSG_PORT_STATS) {
-        EV << "Received STATS message\n";
-
-        // Check if a message from the end device address has already been received
-        if (it == map.end()) {
-            // No, but a gateway cannot receive a STATS message without having forwarded a FORWARD
-            delete msgIn;
-            return;
-        }
-
-        // The end device is in the map, get the entry
-        tuple = it->second;
-
-        // Check if a FORWARD message from the end device address has been received
-        if (std::get<3>(tuple) <= 1) {
-           // No, but a gateway cannot receive a STATS message without having forwarded a FORWARD
-           delete msgIn;
-           return;
-        }
-
-        // Check if the common session key with the end device has been created (should be)
-        auto itCommonSKeys = commonEndDeviceSKeys.find(endDeviceAddress);
-        if (itCommonSKeys == commonEndDeviceSKeys.end()) {
-            // No, but a gateway cannot receive a STATS message without having received a GENERATE_COMMON_KEY
-            delete msgIn;
-            return;
-        }
-
-        // Get the common session key shared with the end device
-        auto commonSKey = itCommonSKeys->second;
-
-        EV << "Decrypting STATS message...\n";
-
-        // Remember the cluster key used for decryption
-        uint8_t decryptKey[KEY_LORAWAN_SIZE];
-        decryptDownlink(payloadIn, payloadIn, decryptKey, srcAddress);
-
-        // Check if the message is a LoRa frame (should be)
-        LoRaPhysicalFrame* phyMsg = dynamic_cast<LoRaPhysicalFrame*>(msgIn);
-        if (!phyMsg)
-          return;
-
-        LoRaDatalinkFrame* dlMsg = dynamic_cast<LoRaDatalinkFrame*>(phyMsg->getEncapsulatedPacket());
-        if (!dlMsg)
-          return;
-
-        LoRaAppUplinkFrame* appMsg = dynamic_cast<LoRaAppUplinkFrame*>(dlMsg->getEncapsulatedPacket());
-        if (!appMsg)
-          return;
-
-        EV << "Encrypting message...\n";
-
-        // Encrypt
-        // ...
-
-        EV << "Recalculating MIC...\n";
-
-        // Recalculate MIC
-        //calculateMIC(dlMsg, appMsg, commonSKey.data());
-        calculateMIC(dlMsg, commonSKey.data());
-
-
-        // Check custom seq number or
-        // check default frame counter (but the gateway checks uplinks and not downlinks because downlinks are
-        // checked by the end device. However if a frame with an old downlink arrives, it will be discarded
-        // by the end device, so instead of consuming bandwidth for a bad message, drop here)
-        // So, check the downlink counter when the frame arrives to the gateway during validation.
-        // Update also the counter? If it is really shared, it should be updated
-        //std::get<5>(tuple) = counter;
-        //map[endDeviceAddress] = tuple;
-
-        // Do not propagate the downlink counter to the network server
-        // because it is a redundant message, already done when STATS message is sent
-
-        // Propagate back the STATS message in response to the FORWARD message
-        // forwarded to nearby gateways over LoRa
-        EV << "Forwarding STATS message over LoRa...\n";
-        //sendBroadcast(this, msgIn, LORA_GATE_OUT);
-        //sendBroadcastSecurely(this, eventTimeoutChannelTransmissions, dynamic_cast<cPacket*> (msgIn), LORA_GATE_OUT);
-        sendMessageLoRa(dynamic_cast<cPacket*> (msgIn), true, false);
-
-        // Do not schedule retransmission because it is burden of the original sender
-
-        // Send signal for statistic collection
-        emit(signalSent, 1u);
-        emit(signalSentLoRa, 1u);
-        emit(signalSentCount, ++messagesSentCount);
-        emit(signalSentLoRaCount, ++messagesSentLoRaCount);
-
-        networkOut += LORA_FRAME_SIZE_DATALINK_HEADER + LORA_FRAME_SIZE_DATALINK_MIC +
-                      LORA_FRAME_SIZE_APP_HEADER + LORA_FRAME_SIZE_APP_PAYLOAD;
-    }
     else if (port == MSG_PORT_PAIRING_REQUEST) {
         EV << "Received PAIRING_REQUEST message\n";
 
-        // Check if a HELLO/FORWARD message from the end device address has already been received
+        // Check if a HELLO message from the end device address has already been received
         if (it == map.end()) {
             // No, but a gateway cannot receive a PAIRING_REQUEST message without having sent a STATS
             delete msgIn;
@@ -3174,7 +2749,6 @@ void LoRaGateway::processMessageFromLoRaLayer(
             EV << "Forwarding PAIRING_REQUEST message to selected gateway over IP...\n";
 
             forwardMessageIp(msgIn, "forwardPairingRequestMsg",
-                    //selectedGatewayAddress, MSG_PORT_FORWARD_PAIRING_REQUEST);
                     selectedGatewayAddress, MSG_PORT_FORWARD_OVER_IP, true);
             // Do not schedule retransmission because it is burden of the original sender
 
@@ -3336,11 +2910,9 @@ void LoRaGateway::processMessageFromLoRaLayer(
                         // Send the message in the receive window of the end device through the sender (peer)
                         if (delay > 0)
                             forwardMessageIp(msgOut, "statsUpdateMsg",
-                                //selectedGatewayAddress, MSG_PORT_FORWARD);
                                 srcAddress, MSG_PORT_FORWARD_OVER_IP, true, delay);
                         else
                             forwardMessageIp(msgOut, "statsUpdateMsg",
-                                //selectedGatewayAddress, MSG_PORT_FORWARD);
                                 srcAddress, MSG_PORT_FORWARD_OVER_IP, true);
 
                         // Send signal for statistic collection
@@ -3549,11 +3121,9 @@ void LoRaGateway::processMessageFromLoRaLayer(
             // Send the message in the receive window of the end device through the sender (peer)
             if (delay > 0)
                 forwardMessageIp(std::get<0>(tuple), "pairingAcceptMsg",
-                    //selectedGatewayAddress, MSG_PORT_FORWARD);
                     srcAddress, MSG_PORT_FORWARD_OVER_IP, true, delay);
             else
                 forwardMessageIp(std::get<0>(tuple), "pairingAcceptMsg",
-                    //selectedGatewayAddress, MSG_PORT_FORWARD);
                     srcAddress, MSG_PORT_FORWARD_OVER_IP, true);
 
             // Send signal for statistic collection
@@ -3655,8 +3225,6 @@ void LoRaGateway::processMessageFromLoRaLayer(
         networkOut += LORA_FRAME_SIZE_DATALINK_HEADER + LORA_FRAME_SIZE_DATALINK_MIC +
                       LORA_FRAME_SIZE_APP_HEADER + LORA_FRAME_SIZE_APP_PAYLOAD;
     }
-
-    //else if (port == MSG_PORT_PAIRING_VERIFY || port == MSG_PORT_MAC_CMD) {
     else if (port == MSG_PORT_CONNECTION || port == MSG_PORT_MAC_CMD) {
         // Propagate back the PAIRING_VERIFY or MAC_CMD message sent by the network server.
         // Do not schedule retransmission because it is burden of the original sender
@@ -3664,7 +3232,6 @@ void LoRaGateway::processMessageFromLoRaLayer(
         // Check if the frame is an uplink
         if (frameType == UPLINK_UNCONFIRMED || frameType == UPLINK_CONFIRMED) {
             EV << "Forwarding CONNECTION message over IP\n";
-            //forwardMessageIp(msgIn, "forwardConnectionMsg", networkServerAddress, MSG_PORT_FORWARD_CONNECTION);
             forwardMessageIp(msgIn, "forwardConnectionMsg", networkServerAddress, MSG_PORT_FORWARD_OVER_IP, false);
 
             emit(signalSentIp, 1u);
@@ -3702,41 +3269,12 @@ void LoRaGateway::processMessageFromLoRaLayer(
         emit(signalSent, 1u);
         emit(signalSentCount, ++messagesSentCount);
     }
-    /*else if (port == MSG_PORT_PAIRING_VERIFIED) {
-        // Propagate the PAIRING_VERIFIED message TO the network server over LoRa
-        EV << "Forwarding PAIRING_VERIFIED message to network server...\n";
-
-        // Do not schedule retransmission because it is burden of the original sender.
-        // Send over UDP
-
-        // Create UDP/IP packet
-        cPacket* msgOut = createMessageIp(
-            //"forwardPairingVerifiedMsg",
-            "forwardConnectionMsg",
-            address, networkServerAddress.data(), IPv4_ADDRESS_SIZE,
-            nullptr, 0,
-            dynamic_cast<LoRaDatalinkFrame*>(msgIn->dup()));
-        msgOut = createMessageUdp(
-            //"forwardPairingVerifiedMsg",
-            "forwardConnectionMsg",
-            MSG_PORT_CONNECTION, MSG_PORT_CONNECTION,
-            nullptr, 0,
-            msgOut);
-
-        // Send the message to the network server
-        send(msgOut, IP_GATE_OUT, 0);
-
-        // Send signal for statistic collection
-        emit(signalSent, 1);
-
-        networkOut += MESSAGE_SIZE_IPV4_HEADER + MESSAGE_SIZE_TCP_HEADER;
-    }*/
     else if (port == MSG_PORT_GENERATE_ASSOCIATION_KEY) {
         EV << "Received GENERATE_ASSOCIATION_KEY message\n";
 
         // Reuse OTAA procedure: a nonce from the end device and one from the gateway
 
-        // Check if a HELLO/FORWARD message from the end device address has already been received
+        // Check if a HELLO message from the end device address has already been received
         if (it == map.end()) {
             // No, but a gateway cannot receive a PAIRING_REQUEST message without having sent a STATS
             delete msgIn;
@@ -3860,7 +3398,6 @@ void LoRaGateway::processMessageFromLoRaLayer(
 
             // Forward the message to selected gateway
             forwardMessageIp(msgIn, "forwardGenerateAssociationKeyMsg",
-                    //networkServerAddress, MSG_PORT_FORWARD_PAIRING_REQUEST);
                     std::get<6>(tuple), MSG_PORT_FORWARD_OVER_IP, true);
 
             // Send signal for statistic collection
@@ -4018,11 +3555,9 @@ void LoRaGateway::processMessageFromLoRaLayer(
             // Send the message in the receive window of the end device through the sender (peer)
             if (delay > 0)
                 forwardMessageIp(msgOut, "generateAssociationKeyACKMsg",
-                    //selectedGatewayAddress, MSG_PORT_FORWARD);
                     srcAddress, MSG_PORT_FORWARD_OVER_IP, true, delay);
             else
                 forwardMessageIp(msgOut, "generateAssociationKeyACKMsg",
-                    //selectedGatewayAddress, MSG_PORT_FORWARD);
                     srcAddress, MSG_PORT_FORWARD_OVER_IP, true);
 
             emit(signalSentIp, 1u);
@@ -4056,7 +3591,7 @@ void LoRaGateway::processMessageFromLoRaLayer(
     else if (port == MSG_PORT_DATA_PROFILE) {
         EV << "Received DATA_PROFILE message\n";
 
-        // Check if a HELLO/FORWARD message from the end device address has already been received
+        // Check if a HELLO message from the end device address has already been received
         if (it == map.end()) {
             delete msgIn;
             return;
@@ -4088,7 +3623,6 @@ void LoRaGateway::processMessageFromLoRaLayer(
 
                 // Forward the message to selected gateway
                 forwardMessageIp(msgIn, "forwardDataProfileMsg",
-                        //std::get<6>(tuple), MSG_PORT_FORWARD_PAIRING_REQUEST);
                         std::get<6>(tuple), MSG_PORT_FORWARD_OVER_IP, false);
 
                 // Send signal for statistic collection
@@ -4267,11 +3801,9 @@ void LoRaGateway::processMessageFromLoRaLayer(
             // Send the message in the receive window of the end device through the sender (peer)
             if (delay > 0)
                 forwardMessageIp(msgOut, "dataProfileACKMsg",
-                    //selectedGatewayAddress, MSG_PORT_FORWARD);
                     srcAddress, MSG_PORT_FORWARD_OVER_IP, true, delay);
             else
                 forwardMessageIp(msgOut, "dataProfileACKMsg",
-                    //selectedGatewayAddress, MSG_PORT_FORWARD);
                     srcAddress, MSG_PORT_FORWARD_OVER_IP, true);
 
             // Send signal for statistic collection
@@ -4306,7 +3838,7 @@ void LoRaGateway::processMessageFromLoRaLayer(
     else if (port == MSG_PORT_DATA) {
         EV << "Received DATA message\n";
 
-        // Check if a HELLO/FORWARD message from the end device address has already been received
+        // Check if a HELLO message from the end device address has already been received
         if (it == map.end()) {
             delete msgIn;
             return;
@@ -5161,7 +4693,7 @@ void LoRaGateway::sendMessageLoRa(
     else
         sendBroadcastSecurely(this, eventTimeoutChannelTransmissions, msg, LORA_GATE_OUT);
 
-    if (retransmit)
+    if (retransmit) {
         // For a retransmission attempt towards end devices,
         // await this roughly identical moment in the future (TX_DELAY + airtimeFrame) and apply the delay.
         // For a retransmission attempt towards gateways,
@@ -5172,9 +4704,10 @@ void LoRaGateway::sendMessageLoRa(
                 delay = 0.5;
             scheduleAt(simTime() + TX_DELAY + airtimeFrame + delay, eventTimeout);
         }
-        else
+        else {
            scheduleAt(simTime() + HELLO_GATEWAY_MAX_DELAY, eventTimeout);
-
+				}
+		}
 
     EV << "Notify neighbors\n";
     EV << "neighborGatewaysInterferences.size(): " << neighborGatewaysInterferences.size() << "\n";

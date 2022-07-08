@@ -164,7 +164,7 @@ const int MEASURED_POWER   = -30;
 
 const double SPEED_LIGHT_ON_AIR = 2.99e8; // m/s
 
-// Retransmissions of an end device GENERATE_COMMON_KEY, HELLO and FORWARD message to minimize loss probability
+// Retransmissions of an end device GENERATE_COMMON_KEY, HELLO message to minimize loss probability
 //const uint8_t RETRANSMISSIONS = 1;
 const uint8_t RETRANSMISSIONS = 3;
 
@@ -185,7 +185,6 @@ const uint8_t STAGE_ACTIVATION               = 0;
 const uint8_t STAGE_ACTIVATED                = 1;
 const uint8_t STAGE_GENERATE_COMMON_KEY      = 2;
 const uint8_t STAGE_HELLO                    = 3;
-const uint8_t STAGE_FORWARD                  = 4;
 const uint8_t STAGE_PAIRING                  = 5;
 const uint8_t STAGE_CONNECTION               = 6;
 const uint8_t STAGE_GENERATE_ASSOCIATION_KEY = 7;
@@ -197,7 +196,6 @@ const uint8_t MSG_PORT_MAC_CMD                  = 0;
 const uint8_t MSG_PORT_HELLO_GATEWAY            = 1;
 const uint8_t MSG_PORT_GENERATE_COMMON_KEY      = 2;
 const uint8_t MSG_PORT_HELLO                    = 3;
-const uint8_t MSG_PORT_FORWARD                  = 4;
 const uint8_t MSG_PORT_STATS                    = 5;
 const uint8_t MSG_PORT_PAIRING_REQUEST          = 6;
 const uint8_t MSG_PORT_PAIRING_ACCEPT           = 7;
@@ -209,11 +207,8 @@ const uint8_t MSG_PORT_DATA_PROFILE             = 10;
 const uint8_t MSG_PORT_DATA                     = 11;
 
 // TCP/UDP ports of IP packets
-//const unsigned MSG_PORT_FORWARD_JOIN            = 6100;
-//const unsigned MSG_PORT_FORWARD_MAC_CMD         = 6101;
 const unsigned MSG_PORT_NEARBY_GATEWAYS         = 5000;
 const unsigned MSG_PORT_SYNC_COUNTER            = 5001;
-//const unsigned MSG_PORT_FORWARD_PAIRING_REQUEST = 5002;
 const unsigned MSG_PORT_FORWARD_OVER_IP         = 5002;
 //const unsigned MSG_PORT_CONNECTION              = 5005;
 const unsigned MSG_PORT_CONNECTION_GATEWAY      = 5005;

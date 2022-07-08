@@ -1,3 +1,7 @@
+gateway_device_coordination_protocol_over_lorawan/simulations/results/
+gateway_device_coordination_protocol_over_lorawan/gateway_device_coordination_protocol_over_lorawan*
+
+## OMNET++
 *.so
 *.a
 *.dylib
